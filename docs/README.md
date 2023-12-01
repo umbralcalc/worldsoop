@@ -1,4 +1,6 @@
-![](./assets/web-heading.png)
+<p align="center">
+<img src="./assets/web-heading.png" width="400"/>
+</p>
 
 # Python API
 
