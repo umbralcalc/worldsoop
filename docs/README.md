@@ -42,3 +42,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> from pkg.python.api import StepperOrRunner
 >>>
 ```
+
+## To do
+
+- Complete the `pkg.api` package methods for all use-cases and make it always import another package called `user_code`
+- Complete the `Dockerfile` by adding in the installation and environment steps above
+- Build the image `docker build -t worldsoop-compiler .`
+
+Once the image has been built, in other repos:
+
+- Run the container `docker run -v /path/to/user/go/files:/app/user-go-files worldsoop-compiler /app/user-go-files/main.go`
+- Copy the api bindings `docker cp container_id:/app/output-directory /path/to/local/output-directory`
+- Make these steps into a standard `./generate_bindings` script and maintain a version of this script in this `worldsoop` repo

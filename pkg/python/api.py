@@ -601,11 +601,11 @@ class StepperOrRunner(go.GoClass):
 
 
 # ---- Functions ---
-def LoadStepperOrRunner(settings, implementations, agents):
-	"""LoadStepperOrRunner(object settings, object implementations, []object agents) object"""
-	return StepperOrRunner(handle=_api.api_LoadStepperOrRunner(settings.handle, implementations.handle, agents.handle))
 def RunSimulator(goRun=False):
 	"""RunSimulator() """
 	_api.api_RunSimulator(goRun)
+def LoadStepperOrRunner(settings, implementations, agents):
+	"""LoadStepperOrRunner(object settings, object implementations, []object agents) object"""
+	return StepperOrRunner(handle=_api.api_LoadStepperOrRunner(settings.handle, implementations.handle, agents.handle))
 
 

@@ -1799,14 +1799,6 @@ func api_StepperOrRunner_Step(_handle CGoHandle, wg CGoHandle, goRun C.char) {
 
 // ---- Functions ---
 
-//export api_LoadStepperOrRunner
-func api_LoadStepperOrRunner(settings CGoHandle, implementations CGoHandle, agents CGoHandle) CGoHandle {
-	_saved_thread := C.PyEval_SaveThread()
-	defer C.PyEval_RestoreThread(_saved_thread)
-	return handleFromPtr_api_StepperOrRunner(api.LoadStepperOrRunner(ptrFromHandle_Ptr_simulator_LoadSettingsConfig(settings), ptrFromHandle_Ptr_simulator_LoadImplementationsConfig(implementations), deptrFromHandle_Slice_Ptr_interactions_AgentConfig(agents)))
-
-}
-
 //export api_RunSimulator
 func api_RunSimulator(goRun C.char) {
 	_saved_thread := C.PyEval_SaveThread()
@@ -1816,4 +1808,12 @@ func api_RunSimulator(goRun C.char) {
 	} else {
 		api.RunSimulator()
 	}
+}
+
+//export api_LoadStepperOrRunner
+func api_LoadStepperOrRunner(settings CGoHandle, implementations CGoHandle, agents CGoHandle) CGoHandle {
+	_saved_thread := C.PyEval_SaveThread()
+	defer C.PyEval_RestoreThread(_saved_thread)
+	return handleFromPtr_api_StepperOrRunner(api.LoadStepperOrRunner(ptrFromHandle_Ptr_simulator_LoadSettingsConfig(settings), ptrFromHandle_Ptr_simulator_LoadImplementationsConfig(implementations), deptrFromHandle_Slice_Ptr_interactions_AgentConfig(agents)))
+
 }

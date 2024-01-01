@@ -195,8 +195,8 @@ mod.add_function('Map_string_Slice_int64_keys', retval('int64_t'), [param('int64
 add_checked_function(mod, 'api_StepperOrRunner_ReadyToTerminate', retval('bool'), [param('int64_t', '_handle')])
 add_checked_function(mod, 'api_StepperOrRunner_Run', None, [param('int64_t', '_handle'), param('bool', 'goRun')])
 add_checked_function(mod, 'api_StepperOrRunner_Step', None, [param('int64_t', '_handle'), param('int64_t', 'wg'), param('bool', 'goRun')])
-add_checked_function(mod, 'api_LoadStepperOrRunner', retval('int64_t'), [param('int64_t', 'settings'), param('int64_t', 'implementations'), param('int64_t', 'agents')])
 add_checked_function(mod, 'api_RunSimulator', None, [param('bool', 'goRun')])
+add_checked_function(mod, 'api_LoadStepperOrRunner', retval('int64_t'), [param('int64_t', 'settings'), param('int64_t', 'implementations'), param('int64_t', 'agents')])
 
 mod.generate(open('api.c', 'w'))
 

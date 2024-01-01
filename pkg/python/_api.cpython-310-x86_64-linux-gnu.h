@@ -327,8 +327,8 @@ extern long long int Map_string_Slice_int64_keys(long long int handle);
 extern char api_StepperOrRunner_ReadyToTerminate(long long int _handle);
 extern void api_StepperOrRunner_Run(long long int _handle, char goRun);
 extern void api_StepperOrRunner_Step(long long int _handle, long long int wg, char goRun);
-extern long long int api_LoadStepperOrRunner(long long int settings, long long int implementations, long long int agents);
 extern void api_RunSimulator(char goRun);
+extern long long int api_LoadStepperOrRunner(long long int settings, long long int implementations, long long int agents);
 
 #ifdef __cplusplus
 }

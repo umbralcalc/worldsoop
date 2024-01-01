@@ -2886,29 +2886,6 @@ PyObject * _wrap__api_api_StepperOrRunner_Step(PyObject * PYBINDGEN_UNUSED(dummy
 
 
 PyObject *
-_wrap__api_api_LoadStepperOrRunner(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
-{
-    PyObject *py_retval;
-    int64_t retval;
-    int64_t settings;
-    int64_t implementations;
-    int64_t agents;
-    const char *keywords[] = {"settings", "implementations", "agents", NULL};
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "LLL", (char **) keywords, &settings, &implementations, &agents)) {
-        return NULL;
-    }
-    retval = api_LoadStepperOrRunner(settings, implementations, agents);
-    if (PyErr_Occurred()) {
-        return NULL;
-    }
-    py_retval = Py_BuildValue((char *) "L", retval);
-    return py_retval;
-}
-PyObject * _wrap__api_api_LoadStepperOrRunner(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
-
-
-PyObject *
 _wrap__api_api_RunSimulator(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
 {
     PyObject *py_retval;
@@ -2929,6 +2906,29 @@ _wrap__api_api_RunSimulator(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, 
     return py_retval;
 }
 PyObject * _wrap__api_api_RunSimulator(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
+
+
+PyObject *
+_wrap__api_api_LoadStepperOrRunner(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
+{
+    PyObject *py_retval;
+    int64_t retval;
+    int64_t settings;
+    int64_t implementations;
+    int64_t agents;
+    const char *keywords[] = {"settings", "implementations", "agents", NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "LLL", (char **) keywords, &settings, &implementations, &agents)) {
+        return NULL;
+    }
+    retval = api_LoadStepperOrRunner(settings, implementations, agents);
+    if (PyErr_Occurred()) {
+        return NULL;
+    }
+    py_retval = Py_BuildValue((char *) "L", retval);
+    return py_retval;
+}
+PyObject * _wrap__api_api_LoadStepperOrRunner(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
 
 static PyMethodDef _api_functions[] = {
     {(char *) "GoPyInit", (PyCFunction) _wrap__api_GoPyInit, METH_NOARGS, "GoPyInit()\n\n" },
@@ -3085,8 +3085,8 @@ static PyMethodDef _api_functions[] = {
     {(char *) "api_StepperOrRunner_ReadyToTerminate", (PyCFunction) _wrap__api_api_StepperOrRunner_ReadyToTerminate, METH_KEYWORDS|METH_VARARGS, "api_StepperOrRunner_ReadyToTerminate(_handle)\n\ntype: _handle: int64_t" },
     {(char *) "api_StepperOrRunner_Run", (PyCFunction) _wrap__api_api_StepperOrRunner_Run, METH_KEYWORDS|METH_VARARGS, "api_StepperOrRunner_Run(_handle, goRun)\n\ntype: _handle: int64_t\ntype: goRun: bool" },
     {(char *) "api_StepperOrRunner_Step", (PyCFunction) _wrap__api_api_StepperOrRunner_Step, METH_KEYWORDS|METH_VARARGS, "api_StepperOrRunner_Step(_handle, wg, goRun)\n\ntype: _handle: int64_t\ntype: wg: int64_t\ntype: goRun: bool" },
-    {(char *) "api_LoadStepperOrRunner", (PyCFunction) _wrap__api_api_LoadStepperOrRunner, METH_KEYWORDS|METH_VARARGS, "api_LoadStepperOrRunner(settings, implementations, agents)\n\ntype: settings: int64_t\ntype: implementations: int64_t\ntype: agents: int64_t" },
     {(char *) "api_RunSimulator", (PyCFunction) _wrap__api_api_RunSimulator, METH_KEYWORDS|METH_VARARGS, "api_RunSimulator(goRun)\n\ntype: goRun: bool" },
+    {(char *) "api_LoadStepperOrRunner", (PyCFunction) _wrap__api_api_LoadStepperOrRunner, METH_KEYWORDS|METH_VARARGS, "api_LoadStepperOrRunner(settings, implementations, agents)\n\ntype: settings: int64_t\ntype: implementations: int64_t\ntype: agents: int64_t" },
     {NULL, NULL, 0, NULL}
 };
 #if PY_VERSION_HEX >= 0x03000000
