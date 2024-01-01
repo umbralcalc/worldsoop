@@ -29,7 +29,7 @@ Then run
 
 ```bash
 cd pkg
-gopy build -output=python -vm=python3 github.com/worldsoop/worldsoop/pkg/test_sim
+gopy build -output=python -vm=python3 github.com/worldsoop/worldsoop/pkg/api
 cd ..
 ```
 
@@ -39,6 +39,6 @@ From this point you can import stuff like this
 (venv) robert@robert-MacBookAir:~/Code/worldsoop$ python
 Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
->>> from pkg.python.test_sim import StepperOrRunner
+>>> from pkg.python.api import StepperOrRunner
 >>>
 ```
