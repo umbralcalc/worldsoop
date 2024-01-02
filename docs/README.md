@@ -19,18 +19,14 @@ pip3 install -r requirements.txt
 Get `gopy` first using
 
 ```bash
-cd pkg
 go install golang.org/x/tools/cmd/goimports@latest
 go install github.com/go-python/gopy@latest
-cd ..
 ```
 
 Then run
 
 ```bash
-cd pkg
 gopy build -output=python -vm=python3 github.com/worldsoop/worldsoop/pkg/api
-cd ..
 ```
 
 From this point you can import stuff like this
@@ -39,13 +35,13 @@ From this point you can import stuff like this
 (venv) robert@robert-MacBookAir:~/Code/worldsoop$ python
 Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
->>> from pkg.python.api import StepperOrRunner
+>>> from python.api import StepperOrRunner
 >>>
 ```
 
 ## To do
 
-- Complete the `pkg.api` package methods for all use-cases and make it always import another package called `user_code`
+- Complete the `pkg.api` package methods for all use-cases and make it always import another package called `user_code` - this should be entirely written and useable with a single worldsoop config struct in Golang and calling only a minimal amount of code in the user's run script
 - Complete the `Dockerfile` by adding in the installation and environment steps above
 - Build the image `docker build -t worldsoop-compiler .`
 
