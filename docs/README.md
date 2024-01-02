@@ -49,4 +49,4 @@ Once the image has been built, in other repos:
 
 - Run the container `docker run -v /path/to/user/go/files:/app/user-go-files worldsoop-compiler /app/user-go-files/main.go`
 - Copy the api bindings `docker cp container_id:/app/output-directory /path/to/local/output-directory`
-- Make these steps into a standard `./generate_python_api` script and maintain a version of this script in this `worldsoop` repo
+- Make these steps into a standard `./generate_python_api.sh` script and maintain a version of this script in this `worldsoop` repo
