@@ -60,7 +60,7 @@ func LoadStepperOrRunner(
 }
 
 func RunSimulator() {
-	settings := simulator.NewLoadSettingsConfigFromYaml("./config.yaml")
+	settings := simulator.NewLoadSettingsConfigFromYaml("./cfg/config.yaml")
 	iterations := []simulator.Iteration{&phenomena.WienerProcessIteration{}}
 	for partitionIndex := range settings.StateWidths {
 		iterations[partitionIndex].Configure(partitionIndex, settings)

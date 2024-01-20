@@ -3,7 +3,6 @@ module github.com/worldsoop/worldsoop
 go 1.21.1
 
 require (
-	github.com/go-python/gopy v0.4.8
 	github.com/gorilla/websocket v1.5.0
 	github.com/umbralcalc/stochadex v0.0.0-20231102095531-ee4f9046f42d
 )
