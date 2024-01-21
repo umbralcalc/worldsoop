@@ -14,6 +14,7 @@ A Go/Python API for building and training decision-making algorithms in realisti
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
+export PYTHONPATH={$PYTHONPATH}:.
 ```
 
 2. Build the Go binary
