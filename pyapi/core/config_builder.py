@@ -13,6 +13,7 @@ class OtherParams:
 class WorldsoopSettingsConfig:
     other_params: list[OtherParams]
     init_state_values: list[list[float]]
+    init_time_value: float
     seeds: list[int]
     state_widths: list[int]
     state_history_depths: list[int]

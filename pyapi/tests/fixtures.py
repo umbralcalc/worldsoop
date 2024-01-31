@@ -14,6 +14,7 @@ def basic_config() -> WorldsoopSettingsConfig:
             ),
         ],
         init_state_values=[[0.45, 1.4, 0.01, -0.13, 0.7]],
+        init_time_value=0.0,
         seeds=[4673],
         state_widths=[5],
         state_history_depths=[2],

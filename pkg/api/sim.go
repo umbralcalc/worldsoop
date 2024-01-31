@@ -37,35 +37,31 @@ type StepperOrRunner interface {
 }
 
 func LoadStepperOrRunner(
-	settings *simulator.LoadSettingsConfig,
-	implementations *simulator.LoadImplementationsConfig,
+	settings *simulator.Settings,
+	implementations *simulator.Implementations,
 	agents []*interactions.AgentConfig,
 ) StepperOrRunner {
 	if len(agents) == 0 {
 		return simulator.NewPartitionCoordinator(
-			simulator.NewStochadexConfig(
-				settings,
-				implementations,
-			),
+			settings,
+			implementations,
 		)
 	} else {
 		return interactions.NewPartitionCoordinatorWithAgents(
-			&interactions.LoadConfigWithAgents{
-				Settings:        settings,
-				Implementations: implementations,
-				Agents:          agents,
-			},
+			settings,
+			implementations,
+			agents,
 		)
 	}
 }
 
 func RunSimulator() {
-	settings := simulator.NewLoadSettingsConfigFromYaml("./cfg/config.yaml")
+	settings := simulator.LoadSettingsFromYaml("./cfg/config.yaml")
 	iterations := []simulator.Iteration{&phenomena.WienerProcessIteration{}}
 	for partitionIndex := range settings.StateWidths {
 		iterations[partitionIndex].Configure(partitionIndex, settings)
 	}
-	implementations := &simulator.LoadImplementationsConfig{
+	implementations := &simulator.Implementations{
 		Iterations:           iterations,
 		OutputCondition:      &simulator.EveryStepOutputCondition{},
 		OutputFunction:       &simulator.StdoutOutputFunction{},

@@ -4,6 +4,7 @@ init_state_values:
   - 0.01
   - -0.13
   - 0.7
+init_time_value: 0.0
 other_params:
 - float_params:
     variances:
