@@ -1,7 +1,10 @@
 package main
 
-import "github.com/worldsoop/worldsoop/pkg/api"
+import (
+	"github.com/umbralcalc/stochadex/pkg/api"
+)
 
 func main() {
-	api.RunSimulator()
+	settingsFile, implementations, dashboard := api.ArgParse()
+	api.RunWithParsedArgs(settingsFile, implementations, dashboard)
 }

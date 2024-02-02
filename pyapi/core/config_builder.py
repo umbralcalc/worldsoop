@@ -1,7 +1,19 @@
 import yaml
+import tempfile
+
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
+
+def dump_yaml(data, filename: Path):
+    with open(filename.as_posix(), "w") as yamlfile:
+        yaml.dump(asdict(data), yamlfile)
+
+
+def dump_temporary_yaml(data) -> tempfile._TemporaryFileWrapper:
+    file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.yaml')
+    dump_yaml(data, Path(file.name))
+    return file
 
 @dataclass
 class OtherParams:
@@ -10,7 +22,7 @@ class OtherParams:
 
 
 @dataclass
-class WorldsoopSettingsConfig:
+class StochadexSettingsConfig:
     other_params: list[OtherParams]
     init_state_values: list[list[float]]
     init_time_value: float
@@ -19,7 +31,26 @@ class WorldsoopSettingsConfig:
     state_history_depths: list[int]
     timesteps_history_depth: int
 
-    def dump_yaml(self, filename: Path):
-        with open(filename.as_posix(), "w") as yamlfile:
-            yaml.dump(asdict(self), yamlfile)
+
+@dataclass
+class SimulatorImplementationsConfig:
+    iterations: list[str]
+    output_condition: str
+    output_function: str
+    termination_condition: str
+    timestep_function: str
+
+
+@dataclass
+class AgentConfig:
+    actor: str
+    generator: str
+    observation: str
+
+
+@dataclass
+class StochadexImplementationsConfig:
+    simulator: SimulatorImplementationsConfig
+    agents: list[AgentConfig]
+    extra_vars_by_package: list[dict[str, list[dict[str, str]]]]
 
