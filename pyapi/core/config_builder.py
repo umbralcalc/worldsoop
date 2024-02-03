@@ -11,7 +11,7 @@ def dump_yaml(data, filename: Path):
 
 
 def dump_temporary_yaml(data) -> tempfile._TemporaryFileWrapper:
-    file = tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".yaml")
+    file = tempfile.NamedTemporaryFile(mode="w", suffix=".yaml")
     dump_yaml(data, Path(file.name))
     return file
 
