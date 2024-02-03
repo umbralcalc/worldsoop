@@ -27,5 +27,5 @@ go build -o bin/ ./cmd/worldsoop
 3. Run some examples...
 
 ```bash
-python pyapi/examples/multiple_weiner_processes.py
+python pyapi/examples/multiple_wiener_processes.py
 ```
