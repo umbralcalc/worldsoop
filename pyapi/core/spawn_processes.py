@@ -15,7 +15,7 @@ class WorldsoopProcessArgs:
     extras: list[str] | None = None
 
 
-def run_worldsoop_process(args: WorldsoopProcessArgs) -> str:
+def run_worldsoop_process(args: WorldsoopProcessArgs):
     cmd = ["./bin/worldsoop"]
     cmd += ["--settings", args.settings.as_posix()]
     cmd += ["--implementations", args.implementations.as_posix()]
@@ -31,7 +31,7 @@ def run_worldsoop_process(args: WorldsoopProcessArgs) -> str:
             text=True,
             check=True,
         )
-        return result.stdout
+        print(result.stdout)
     except subprocess.CalledProcessError as e:
         raise Exception(f"Go process error: {e.returncode}, Output: {e.output}")
 
@@ -86,6 +86,6 @@ def spawn_worldsoop_processes_from_configs(
             if dashboard_file:
                 dashboard_file.close()
             try:
-                result = future.result()
+                future.result()
             except Exception as e:
                 print(f"Go process {i} failed!\nError: {str(e)}")

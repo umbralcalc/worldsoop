@@ -6,7 +6,7 @@
 
 A Go/Python API for building and training decision-making algorithms in realistic simulation environments.
 
-## Installation notes
+## Quickstart notes
 
 1. Get the python environment sorted
 
@@ -24,8 +24,8 @@ go mod tidy
 go build -o bin/ ./cmd/worldsoop
 ```
 
-...which can be run like this
+3. Run some examples...
 
 ```bash
-./bin/worldsoop
+python pyapi/examples/multiple_weiner_processes.py
 ```
