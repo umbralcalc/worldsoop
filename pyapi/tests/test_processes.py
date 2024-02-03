@@ -17,7 +17,7 @@ def test_process_running(
         WorldsoopProcessArgs(
             settings=Path(settings_file.name),
             implementations=Path(implementations_file.name),
-            stdout=Path("/tmp/tempdata.txt"),
+            extras=["> /tmp/tempdata.txt"],
         ),
     )
     settings_file.close()
