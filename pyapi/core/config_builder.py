@@ -11,9 +11,10 @@ def dump_yaml(data, filename: Path):
 
 
 def dump_temporary_yaml(data) -> tempfile._TemporaryFileWrapper:
-    file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.yaml')
+    file = tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".yaml")
     dump_yaml(data, Path(file.name))
     return file
+
 
 @dataclass
 class OtherParams:
@@ -53,4 +54,3 @@ class StochadexImplementationsConfig:
     simulator: SimulatorImplementationsConfig
     agents: list[AgentConfig]
     extra_vars_by_package: list[dict[str, list[dict[str, str]]]]
-

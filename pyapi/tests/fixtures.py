@@ -1,7 +1,7 @@
 import pytest
 
 from pyapi.core.config_builder import (
-    StochadexSettingsConfig, 
+    StochadexSettingsConfig,
     SimulatorImplementationsConfig,
     AgentConfig,
     StochadexImplementationsConfig,
@@ -39,10 +39,9 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
         timesteps_history_depth=2,
     )
 
+
 @pytest.fixture
-def simulator_implementations_config() -> (
-    SimulatorImplementationsConfig
-):
+def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
         iterations=[r"firstWienerProcess", r"secondWienerProcess"],
         output_condition=r"&simulator.EveryStepOutputCondition{}",
@@ -73,7 +72,7 @@ def stochadex_implementations_config(
         agents=[agent_config, agent_config],
         extra_vars_by_package=[
             {
-                "github.com/umbralcalc/stochadex/pkg/phenomena":[
+                "github.com/umbralcalc/stochadex/pkg/phenomena": [
                     {"firstWienerProcess": r"&phenomena.WienerProcessIteration{}"},
                     {"secondWienerProcess": r"&phenomena.WienerProcessIteration{}"},
                 ],

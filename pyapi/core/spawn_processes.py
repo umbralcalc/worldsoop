@@ -1,31 +1,42 @@
-import os
-from multiprocessing import Process
+import subprocess
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
-def run_worldsoop_binary(*args, **kwargs):
-    cmd = "./bin/worldsoop"
+def run_worldsoop_process(*args, **kwargs) -> str:
+    cmd = ["./bin/worldsoop"]
     for arg in args:
-        cmd += f" {arg}"
+        cmd += [f"{arg}"]
     for k, v in kwargs.items():
-        cmd += f" --{k} {v}"
-    os.system(cmd)
+        cmd += [f"--{k}", f"{v}"]
+    try:
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        raise Exception(f"Go process error: {e.returncode}, Output: {e.output}")
 
 
-def spawn_worldsoop_process(*args, **kwargs) -> Process:
-    p = Process(target=run_worldsoop_binary, *args, **kwargs)
-    p.start()
+def spawn_worldsoop_processes(
+    num: int, 
+    max_workers: int, 
+    *args, 
+    **kwargs
+):
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(run_worldsoop_process, *args, **kwargs): i 
+            for i in range(num)
+        }
 
-
-def spawn_worldsoop_processes(num: int, *args, **kwargs) -> list[Process]:
-    processes: list[Process] = []
-    for _ in range(num):
-        processes.append(spawn_worldsoop_process(*args, **kwargs))
-    return processes
-
-
-def await_processes(processes: list[Process]): 
-    for process in processes:
-        if process is None:
-            continue
-        process.join()
-
+        for future in as_completed(futures):
+            i = futures[future]
+            try:
+                result = future.result()
+            except Exception as e:
+                print(f"Go process {i} failed!\nError: {str(e)}")
