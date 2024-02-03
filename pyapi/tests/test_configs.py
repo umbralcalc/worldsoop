@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from pyapi.core.config_builder import dump_temporary_yaml
 
 
