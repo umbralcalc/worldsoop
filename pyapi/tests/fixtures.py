@@ -45,7 +45,7 @@ def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
         iterations=[r"firstWienerProcess", r"secondWienerProcess"],
         output_condition=r"&simulator.EveryStepOutputCondition{}",
-        output_function=r"&simulator.StdoutOutputFunction{}",
+        output_function=r"&simulator.NilOutputFunction{}",
         termination_condition=(
             r"&simulator.NumberOfStepsTerminationCondition{MaxNumberOfSteps: 100}"
         ),

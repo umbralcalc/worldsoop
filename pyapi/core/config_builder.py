@@ -54,3 +54,19 @@ class StochadexImplementationsConfig:
     simulator: SimulatorImplementationsConfig
     agents: list[AgentConfig]
     extra_vars_by_package: list[dict[str, list[dict[str, str]]]]
+
+
+@dataclass
+class DashboardConfig:
+    address: str
+    handle: str
+    millisecond_delay: int
+    react_app_location: str
+    launch_dashboard: bool
+
+
+@dataclass
+class WorldsoopConfig:
+    settings: StochadexSettingsConfig
+    implementations: StochadexImplementationsConfig
+    dashboard: DashboardConfig | None = None
