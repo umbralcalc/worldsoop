@@ -34,6 +34,7 @@ def run_worldsoop_process(args: WorldsoopProcessArgs):
         )
         print(result.stdout)
     except subprocess.CalledProcessError as e:
+        print(e.stderr)
         raise Exception(f"Go process error: {e.returncode}, Output: {e.output}")
 
 
