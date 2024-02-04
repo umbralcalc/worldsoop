@@ -3,7 +3,6 @@ package archetypes
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
 type MultiStagePipelineIteration struct {
-	simulator.Iteration
 }
 
 func (m *MultiStagePipelineIteration) Configure(

@@ -3,7 +3,6 @@ package archetypes
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
 type DynamicSpatialFieldIteration struct {
-	simulator.Iteration
 }
 
 func (d *DynamicSpatialFieldIteration) Configure(

@@ -3,7 +3,6 @@ package archetypes
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
 type CentralisedExchangeIteration struct {
-	simulator.Iteration
 }
 
 func (c *CentralisedExchangeIteration) Configure(
