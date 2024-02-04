@@ -15,6 +15,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 export PYTHONPATH={$PYTHONPATH}:.
+export WORLDSOOP_PATH=your/path/to/worldsoop
 ```
 
 2. Build the Go binary

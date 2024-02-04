@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from pathlib import Path
@@ -16,7 +17,7 @@ class WorldsoopProcessArgs:
 
 
 def run_worldsoop_process(args: WorldsoopProcessArgs):
-    cmd = ["./bin/worldsoop"]
+    cmd = [f"{os.environ['WORLDSOOP_PATH']}/bin/worldsoop"]
     cmd += ["--settings", args.settings.as_posix()]
     cmd += ["--implementations", args.implementations.as_posix()]
     if args.dashboard:
