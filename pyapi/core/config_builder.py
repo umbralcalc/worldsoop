@@ -5,6 +5,11 @@ from pathlib import Path
 from dataclasses import dataclass, asdict
 
 
+def load_yaml(filename: Path) -> dict:
+    with open(filename.as_posix(), "r") as f:
+        return yaml.safe_load(f)
+
+
 def dump_yaml(data, filename: Path):
     with open(filename.as_posix(), "w") as yamlfile:
         yaml.dump(asdict(data), yamlfile)
@@ -32,6 +37,12 @@ class StochadexSettingsConfig:
     state_history_depths: list[int]
     timesteps_history_depth: int
 
+    @classmethod
+    def from_yaml(cls, filename: Path) -> "StochadexSettingsConfig":
+        data = load_yaml(filename)
+        data["other_params"] = [OtherParams(**p) for p in data["other_params"]]
+        return cls(**data)
+
 
 @dataclass
 class SimulatorImplementationsConfig:
@@ -54,6 +65,13 @@ class StochadexImplementationsConfig:
     simulator: SimulatorImplementationsConfig
     agents: list[AgentConfig]
     extra_vars_by_package: list[dict[str, list[dict[str, str]]]]
+
+    @classmethod
+    def from_yaml(cls, filename: Path) -> "StochadexImplementationsConfig":
+        data = load_yaml(filename)
+        data["simulator"] = SimulatorImplementationsConfig(**data["simulator"])
+        data["agents"] = [AgentConfig(**c) for c in data["agents"]]
+        return cls(**data)
 
 
 @dataclass
