@@ -14,8 +14,8 @@ A Go/Python API for building and training decision-making algorithms in realisti
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
-export PYTHONPATH={$PYTHONPATH}:.
-export WORLDSOOP_PATH=your/path/to/worldsoop
+export WORLDSOOP_PATH=/your/path/to/worldsoop
+export PYTHONPATH=${PYTHONPATH}:${WORLDSOOP_PATH}
 ```
 
 2. Build the Go binary
