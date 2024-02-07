@@ -2,6 +2,7 @@ package archetypes
 
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
+// CentralisedExchangeIteration
 type CentralisedExchangeIteration struct {
 }
 

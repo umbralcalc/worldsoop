@@ -8,6 +8,7 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
+// SimpleStateTransitionIteration
 type SimpleStateTransitionIteration struct {
 	unitUniformDist *distuv.Uniform
 }
@@ -44,7 +45,7 @@ func (s *SimpleStateTransitionIteration) Iterate(
 		cumulatives = append(cumulatives, cumulative)
 	}
 	transitions :=
-		params.FloatParams["allowed_transitions_from_"+strconv.Itoa(int(state[0]))]
+		params.IntParams["transitions_from_"+strconv.Itoa(int(state[0]))]
 	event := s.unitUniformDist.Rand()
 	if event*cumulative < cumulatives[0] {
 		return state
