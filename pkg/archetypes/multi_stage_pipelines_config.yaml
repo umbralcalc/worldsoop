@@ -1,0 +1,34 @@
+other_params:
+- float_params:
+    downstream_partition_flow_rates: [1.0]
+    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+  int_params:
+    upstream_partitions: []
+    downstream_partitions: [1]
+- float_params:
+    downstream_partition_flow_rates: [1.0, 1.0]
+    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+  int_params:
+    upstream_partitions: [0]
+    downstream_partitions: [2, 3]
+- float_params:
+    downstream_partition_flow_rates: [1.0]
+    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+  int_params:
+    upstream_partitions: [1]
+    downstream_partitions: [3]
+- float_params:
+    downstream_partition_flow_rates: [1.0]
+    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+  int_params:
+    upstream_partitions: [1, 2]
+    downstream_partitions: [-1]
+init_state_values:
+- [1e8, 1e8, 1e8, 1e8, 1e8, -1, -1]
+- [0, 0, 0, 0, 0, -1, -1]
+- [0, 0, 0, 0, 0, -1, -1]
+- [0, 0, 0, 0, 0, -1, -1]
+seeds: [123563, 352, 11231, 7641]
+state_widths: [7, 7, 7, 7]
+state_history_depths: [2, 2, 2, 2]
+timesteps_history_depth: 2

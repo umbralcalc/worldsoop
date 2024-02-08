@@ -43,9 +43,7 @@ func (m *MultiStagePipelineIteration) Iterate(
 	cumulative := timestepsHistory.NextIncrement
 	cumulatives := make([]float64, 0)
 	cumulatives = append(cumulatives, cumulative)
-	downstreams := params.IntParams["downstream_partitions"]
-	for _, index := range downstreams {
-		rate := params.FloatParams["downstream_partition_flow_rates"][index]
+	for _, rate := range params.FloatParams["downstream_partition_flow_rates"] {
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)
 	}
@@ -55,11 +53,34 @@ func (m *MultiStagePipelineIteration) Iterate(
 		state[len(state)-1] = -1.0
 		return state
 	}
-
-	// Now that the event is happening you still need to randomly find one of
-	// the objects to send according to probabilities and whether or not they
-	// exist in this stage
-
+	objectCumulative := 0.0
+	objects := make([]int, 0)
+	objectCumulatives := make([]float64, 0)
+	stateHistory := stateHistories[partitionIndex]
+	for i := 0; i < stateHistory.StateWidth-2; i++ {
+		p := stateHistory.Values.At(0, i)
+		if p == 0 {
+			continue
+		}
+		p *= params.FloatParams["object_dispatch_probabilities"][i]
+		objectCumulative += p
+		objects = append(objects, i)
+		objectCumulatives = append(objectCumulatives, objectCumulative)
+	}
+	if len(objects) == 0 {
+		return state
+	}
+	whichObject := objects[len(objects)-1]
+	objectEvent := m.unitUniformDist.Rand()
+	for i, c := range objectCumulatives {
+		if objectEvent*objectCumulative < c {
+			whichObject = objects[i]
+			break
+		}
+	}
+	state[whichObject] -= 1
+	state[len(state)-2] = float64(whichObject)
+	downstreams := params.IntParams["downstream_partitions"]
 	for i, c := range cumulatives {
 		if event*cumulative < c {
 			state[len(state)-1] = float64(downstreams[i-1])
