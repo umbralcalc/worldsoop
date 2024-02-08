@@ -2,17 +2,17 @@ package archetypes
 
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
-// DistributedStateNetworkIteration
-type DistributedStateNetworkIteration struct {
+// StateNetworkNodeIteration
+type StateNetworkNodeIteration struct {
 }
 
-func (d *DistributedStateNetworkIteration) Configure(
+func (s *StateNetworkNodeIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
 }
 
-func (d *DistributedStateNetworkIteration) Iterate(
+func (s *StateNetworkNodeIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,

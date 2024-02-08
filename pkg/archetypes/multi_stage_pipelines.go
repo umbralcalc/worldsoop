@@ -6,26 +6,26 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
-// MultiStagePipelineIteration
-type MultiStagePipelineIteration struct {
+// PipelineStageIteration
+type PipelineStageIteration struct {
 	unitUniformDist *distuv.Uniform
 }
 
-func (m *MultiStagePipelineIteration) Configure(
+func (p *PipelineStageIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
 	seed := settings.Seeds[partitionIndex]
 	rand.Seed(seed)
 
-	m.unitUniformDist = &distuv.Uniform{
+	p.unitUniformDist = &distuv.Uniform{
 		Min: 0.0,
 		Max: 1.0,
 		Src: rand.NewSource(seed),
 	}
 }
 
-func (m *MultiStagePipelineIteration) Iterate(
+func (p *PipelineStageIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,
@@ -47,7 +47,7 @@ func (m *MultiStagePipelineIteration) Iterate(
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)
 	}
-	event := m.unitUniformDist.Rand()
+	event := p.unitUniformDist.Rand()
 	if event*cumulative < cumulatives[0] {
 		// minus number indicates nothing sent this step
 		state[len(state)-1] = -1.0
@@ -58,12 +58,12 @@ func (m *MultiStagePipelineIteration) Iterate(
 	objectCumulatives := make([]float64, 0)
 	stateHistory := stateHistories[partitionIndex]
 	for i := 0; i < stateHistory.StateWidth-2; i++ {
-		p := stateHistory.Values.At(0, i)
-		if p == 0 {
+		prob := stateHistory.Values.At(0, i)
+		if prob == 0 {
 			continue
 		}
-		p *= params.FloatParams["object_dispatch_probabilities"][i]
-		objectCumulative += p
+		prob *= params.FloatParams["object_dispatch_probabilities"][i]
+		objectCumulative += prob
 		objects = append(objects, i)
 		objectCumulatives = append(objectCumulatives, objectCumulative)
 	}
@@ -71,7 +71,7 @@ func (m *MultiStagePipelineIteration) Iterate(
 		return state
 	}
 	whichObject := objects[len(objects)-1]
-	objectEvent := m.unitUniformDist.Rand()
+	objectEvent := p.unitUniformDist.Rand()
 	for i, c := range objectCumulatives {
 		if objectEvent*objectCumulative < c {
 			whichObject = objects[i]

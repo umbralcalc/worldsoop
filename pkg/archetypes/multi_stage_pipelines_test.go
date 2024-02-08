@@ -13,10 +13,10 @@ func TestMultiStagePipelineIteration(t *testing.T) {
 			settings :=
 				simulator.LoadSettingsFromYaml("./multi_stage_pipelines_config.yaml")
 			iterations := []simulator.Iteration{
-				&MultiStagePipelineIteration{},
-				&MultiStagePipelineIteration{},
-				&MultiStagePipelineIteration{},
-				&MultiStagePipelineIteration{},
+				&PipelineStageIteration{},
+				&PipelineStageIteration{},
+				&PipelineStageIteration{},
+				&PipelineStageIteration{},
 			}
 			for index, iteration := range iterations {
 				iteration.Configure(index, settings)

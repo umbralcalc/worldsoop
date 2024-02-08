@@ -2,17 +2,17 @@ package archetypes
 
 import "github.com/umbralcalc/stochadex/pkg/simulator"
 
-// DynamicSpatialFieldIteration
-type DynamicSpatialFieldIteration struct {
+// SpatialFieldPointIteration
+type SpatialFieldPointIteration struct {
 }
 
-func (d *DynamicSpatialFieldIteration) Configure(
+func (s *SpatialFieldPointIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
 }
 
-func (d *DynamicSpatialFieldIteration) Iterate(
+func (s *SpatialFieldPointIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,
