@@ -1,11 +1,5 @@
 other_params:
-- float_params:
-    transition_rates_from_0: [1.0, 2.0, 1.0, 1.0]
-    transition_rates_from_1: [0.3, 1.2, 0.1]
-    transition_rates_from_2: [1.0]
-    transition_rates_from_3: [1.0]
-    transition_rates_from_4: [1.0, 2.0]
-    transition_rates_from_5: [0.5]
+- float_params: {}
   int_params:
     transitions_from_0: [1, 2, 3, 4]
     transitions_from_1: [3, 4, 5]
@@ -13,9 +7,28 @@ other_params:
     transitions_from_3: [1]
     transitions_from_4: [3, 2]
     transitions_from_5: [1]
+    transition_rates_partition_indices: [1, 2, 3, 4, 5, 6]
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
 init_state_values:
 - [0]
-seeds: [123563]
-state_widths: [1]
-state_history_depths: [2]
+- [1.0, 2.0, 1.0, 1.0]
+- [0.3, 1.2, 0.1]
+- [1.0]
+- [1.0]
+- [1.0, 2.0]
+- [0.5]
+seeds: [123563, 0, 0, 0, 0, 0, 0]
+state_widths: [1, 4, 3, 1, 1, 2, 1]
+state_history_depths: [2, 2, 2, 2, 2, 2, 2]
 timesteps_history_depth: 2

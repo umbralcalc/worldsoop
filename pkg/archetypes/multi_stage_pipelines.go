@@ -8,7 +8,9 @@ import (
 
 // PipelineStageIteration
 type PipelineStageIteration struct {
-	unitUniformDist *distuv.Uniform
+	unitUniformDist          *distuv.Uniform
+	downstreamFlowRatesIndex int
+	dispatchProbsIndex       int
 }
 
 func (p *PipelineStageIteration) Configure(
@@ -23,6 +25,12 @@ func (p *PipelineStageIteration) Configure(
 		Max: 1.0,
 		Src: rand.NewSource(seed),
 	}
+	k := "downstream_flow_rates_partition_index"
+	p.downstreamFlowRatesIndex =
+		int(settings.OtherParams[partitionIndex].IntParams[k][0])
+	k = "object_dispatch_probs_partition_index"
+	p.dispatchProbsIndex =
+		int(settings.OtherParams[partitionIndex].IntParams[k][0])
 }
 
 func (p *PipelineStageIteration) Iterate(
@@ -43,7 +51,8 @@ func (p *PipelineStageIteration) Iterate(
 	cumulative := timestepsHistory.NextIncrement
 	cumulatives := make([]float64, 0)
 	cumulatives = append(cumulatives, cumulative)
-	for _, rate := range params.FloatParams["downstream_partition_flow_rates"] {
+	for _, rate := range stateHistories[p.downstreamFlowRatesIndex].
+		Values.RawRowView(0) {
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)
 	}
@@ -62,7 +71,7 @@ func (p *PipelineStageIteration) Iterate(
 		if prob == 0 {
 			continue
 		}
-		prob *= params.FloatParams["object_dispatch_probabilities"][i]
+		prob *= stateHistories[p.dispatchProbsIndex].Values.At(0, i)
 		objectCumulative += prob
 		objects = append(objects, i)
 		objectCumulatives = append(objectCumulatives, objectCumulative)

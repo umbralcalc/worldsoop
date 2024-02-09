@@ -17,6 +17,14 @@ func TestMultiStagePipelineIteration(t *testing.T) {
 				&PipelineStageIteration{},
 				&PipelineStageIteration{},
 				&PipelineStageIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
+				&ConstantValuesIteration{},
 			}
 			for index, iteration := range iterations {
 				iteration.Configure(index, settings)

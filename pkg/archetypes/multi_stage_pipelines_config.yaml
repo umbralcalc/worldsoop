@@ -1,34 +1,58 @@
 other_params:
-- float_params:
-    downstream_partition_flow_rates: [1.0]
-    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+- float_params: {}
   int_params:
     upstream_partitions: []
     downstream_partitions: [1]
-- float_params:
-    downstream_partition_flow_rates: [1.0, 1.0]
-    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+    downstream_flow_rates_partition_index: [4]
+    object_dispatch_probs_partition_index: [8]
+- float_params: {}
   int_params:
     upstream_partitions: [0]
     downstream_partitions: [2, 3]
-- float_params:
-    downstream_partition_flow_rates: [1.0]
-    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+    downstream_flow_rates_partition_index: [5]
+    object_dispatch_probs_partition_index: [9]
+- float_params: {}
   int_params:
     upstream_partitions: [1]
     downstream_partitions: [3]
-- float_params:
-    downstream_partition_flow_rates: [1.0]
-    object_dispatch_probabilities: [0.2, 0.2, 0.2, 0.2, 0.2]
+    downstream_flow_rates_partition_index: [6]
+    object_dispatch_probs_partition_index: [10]
+- float_params: {}
   int_params:
     upstream_partitions: [1, 2]
     downstream_partitions: [-1]
+    downstream_flow_rates_partition_index: [7]
+    object_dispatch_probs_partition_index: [11]
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
+- float_params: {}
+  int_params: {}
 init_state_values:
 - [1e8, 1e8, 1e8, 1e8, 1e8, -1, -1]
 - [0, 0, 0, 0, 0, -1, -1]
 - [0, 0, 0, 0, 0, -1, -1]
 - [0, 0, 0, 0, 0, -1, -1]
-seeds: [123563, 352, 11231, 7641]
-state_widths: [7, 7, 7, 7]
-state_history_depths: [2, 2, 2, 2]
+- [1.0]
+- [1.0, 1.0]
+- [1.0]
+- [1.0]
+- [0.2, 0.2, 0.2, 0.2, 0.2]
+- [0.2, 0.2, 0.2, 0.2, 0.2]
+- [0.2, 0.2, 0.2, 0.2, 0.2]
+- [0.2, 0.2, 0.2, 0.2, 0.2]
+seeds: [123563, 352, 11231, 7641, 0, 0, 0, 0, 0, 0, 0, 0]
+state_widths: [7, 7, 7, 7, 1, 2, 1, 1, 5, 5, 5, 5]
+state_history_depths: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 timesteps_history_depth: 2

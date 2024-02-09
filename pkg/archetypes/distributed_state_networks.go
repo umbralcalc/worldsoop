@@ -18,5 +18,6 @@ func (s *StateNetworkNodeIteration) Iterate(
 	stateHistories []*simulator.StateHistory,
 	timestepsHistory *simulator.CumulativeTimestepsHistory,
 ) []float64 {
+	// params.IntParams["connected_node_partitions"]
 	return make([]float64, 0)
 }

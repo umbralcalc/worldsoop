@@ -8,9 +8,29 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
+// ConstantValuesIteration
+type ConstantValuesIteration struct {
+}
+
+func (c *ConstantValuesIteration) Configure(
+	partitionIndex int,
+	settings *simulator.Settings,
+) {
+}
+
+func (c *ConstantValuesIteration) Iterate(
+	params *simulator.OtherParams,
+	partitionIndex int,
+	stateHistories []*simulator.StateHistory,
+	timestepsHistory *simulator.CumulativeTimestepsHistory,
+) []float64 {
+	return stateHistories[partitionIndex].Values.RawRowView(0)
+}
+
 // SimpleStateTransitionIteration
 type SimpleStateTransitionIteration struct {
-	unitUniformDist *distuv.Uniform
+	unitUniformDist       *distuv.Uniform
+	transitionRateIndices []int64
 }
 
 func (s *SimpleStateTransitionIteration) Configure(
@@ -25,6 +45,8 @@ func (s *SimpleStateTransitionIteration) Configure(
 		Max: 1.0,
 		Src: rand.NewSource(seed),
 	}
+	s.transitionRateIndices =
+		settings.OtherParams[partitionIndex].IntParams["transition_rates_partition_indices"]
 }
 
 func (s *SimpleStateTransitionIteration) Iterate(
@@ -39,7 +61,7 @@ func (s *SimpleStateTransitionIteration) Iterate(
 	cumulatives := make([]float64, 0)
 	cumulatives = append(cumulatives, cumulative)
 	transitionRates :=
-		params.FloatParams["transition_rates_from_"+strconv.Itoa(int(state[0]))]
+		stateHistories[s.transitionRateIndices[int(state[0])]].Values.RawRowView(0)
 	for _, rate := range transitionRates {
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)

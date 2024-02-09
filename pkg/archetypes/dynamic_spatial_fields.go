@@ -18,5 +18,7 @@ func (s *SpatialFieldPointIteration) Iterate(
 	stateHistories []*simulator.StateHistory,
 	timestepsHistory *simulator.CumulativeTimestepsHistory,
 ) []float64 {
+	// params.IntParams["neighbour_partitions"]
+	// params.FloatParams["neighbour_weightings"]
 	return make([]float64, 0)
 }
