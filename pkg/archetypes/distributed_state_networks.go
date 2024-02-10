@@ -19,5 +19,7 @@ func (s *StateNetworkNodeIteration) Iterate(
 	timestepsHistory *simulator.CumulativeTimestepsHistory,
 ) []float64 {
 	// params.IntParams["connected_node_partitions"]
+	// this can be like the simple state transitions but the state of each
+	// node is affected by the connected partitions
 	return make([]float64, 0)
 }
