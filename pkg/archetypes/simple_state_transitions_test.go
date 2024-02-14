@@ -12,16 +12,19 @@ func TestSimpleStateTransitionIteration(t *testing.T) {
 		func(t *testing.T) {
 			settings :=
 				simulator.LoadSettingsFromYaml("./simple_state_transitions_config.yaml")
-			iterations := []simulator.Iteration{
-				&SimpleStateTransitionIteration{},
-				&ConstantValuesIteration{},
-				&ConstantValuesIteration{},
-				&ConstantValuesIteration{},
-				&ConstantValuesIteration{},
-				&ConstantValuesIteration{},
-				&ConstantValuesIteration{},
+			iterations := [][]simulator.Iteration{
+				{
+					&simulator.ConstantValuesIteration{},
+					&SimpleStateTransitionIteration{},
+				},
 			}
-			iterations[0].Configure(0, settings)
+			index := 0
+			for _, serialIterations := range iterations {
+				for _, iteration := range serialIterations {
+					iteration.Configure(index, settings)
+					index += 1
+				}
+			}
 			implementations := &simulator.Implementations{
 				Iterations:      iterations,
 				OutputCondition: &simulator.NilOutputCondition{},

@@ -13,15 +13,19 @@ func TestDynamicSpatialFieldIteration(t *testing.T) {
 		func(t *testing.T) {
 			settings :=
 				simulator.LoadSettingsFromYaml("./dynamic_spatial_fields_config.yaml")
-			iterations := []simulator.Iteration{
-				&SpatialFieldPointIteration{},
-				&phenomena.WienerProcessIteration{},
-				&phenomena.WienerProcessIteration{},
-				&phenomena.WienerProcessIteration{},
-				&phenomena.WienerProcessIteration{},
+			iterations := [][]simulator.Iteration{
+				{&SpatialFieldPointIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
 			}
-			for index, iteration := range iterations {
-				iteration.Configure(index, settings)
+			index := 0
+			for _, serialIterations := range iterations {
+				for _, iteration := range serialIterations {
+					iteration.Configure(index, settings)
+					index += 1
+				}
 			}
 			implementations := &simulator.Implementations{
 				Iterations:      iterations,

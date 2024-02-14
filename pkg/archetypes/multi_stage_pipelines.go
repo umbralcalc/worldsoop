@@ -1,6 +1,8 @@
 package archetypes
 
 import (
+	"strconv"
+
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 	"golang.org/x/exp/rand"
 	"gonum.org/v1/gonum/stat/distuv"
@@ -51,8 +53,8 @@ func (p *PipelineStageIteration) Iterate(
 	cumulative := timestepsHistory.NextIncrement
 	cumulatives := make([]float64, 0)
 	cumulatives = append(cumulatives, cumulative)
-	for _, rate := range stateHistories[p.downstreamFlowRatesIndex].
-		Values.RawRowView(0) {
+	for _, rate := range params.FloatParams["partition_"+
+		strconv.Itoa(p.downstreamFlowRatesIndex)] {
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)
 	}
@@ -66,12 +68,13 @@ func (p *PipelineStageIteration) Iterate(
 	objects := make([]int, 0)
 	objectCumulatives := make([]float64, 0)
 	stateHistory := stateHistories[partitionIndex]
+	probs := params.FloatParams["partition_"+strconv.Itoa(p.dispatchProbsIndex)]
 	for i := 0; i < stateHistory.StateWidth-2; i++ {
 		prob := stateHistory.Values.At(0, i)
 		if prob == 0 {
 			continue
 		}
-		prob *= stateHistories[p.dispatchProbsIndex].Values.At(0, i)
+		prob *= probs[i]
 		objectCumulative += prob
 		objects = append(objects, i)
 		objectCumulatives = append(objectCumulatives, objectCumulative)

@@ -3,16 +3,16 @@ other_params:
     neighbour_weightings: [1.0, 1.0, 1.0, 1.0]
   int_params:
     neighbour_partitions: [1, 2, 3, 4]
-- float_params:
+- float_params: 
     variances: [1.0, 1.0, 1.0]
   int_params: {}
-- float_params:
+- float_params: 
     variances: [1.0, 1.0, 1.0]
   int_params: {}
-- float_params:
+- float_params: 
     variances: [1.0, 1.0, 1.0]
   int_params: {}
-- float_params:
+- float_params: 
     variances: [1.0, 1.0, 1.0]
   int_params: {}
 init_state_values:

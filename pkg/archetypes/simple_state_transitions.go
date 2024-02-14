@@ -8,29 +8,11 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
-// ConstantValuesIteration
-type ConstantValuesIteration struct {
-}
-
-func (c *ConstantValuesIteration) Configure(
-	partitionIndex int,
-	settings *simulator.Settings,
-) {
-}
-
-func (c *ConstantValuesIteration) Iterate(
-	params *simulator.OtherParams,
-	partitionIndex int,
-	stateHistories []*simulator.StateHistory,
-	timestepsHistory *simulator.CumulativeTimestepsHistory,
-) []float64 {
-	return stateHistories[partitionIndex].Values.RawRowView(0)
-}
-
 // SimpleStateTransitionIteration
 type SimpleStateTransitionIteration struct {
-	unitUniformDist       *distuv.Uniform
-	transitionRateIndices []int64
+	unitUniformDist      *distuv.Uniform
+	transitionRatesIndex int
+	rateSlices           [][]int
 }
 
 func (s *SimpleStateTransitionIteration) Configure(
@@ -45,8 +27,21 @@ func (s *SimpleStateTransitionIteration) Configure(
 		Max: 1.0,
 		Src: rand.NewSource(seed),
 	}
-	s.transitionRateIndices =
-		settings.OtherParams[partitionIndex].IntParams["transition_rates_partition_indices"]
+	s.rateSlices = make([][]int, 0)
+	i := 0
+	ratesTotal := 0
+	for {
+		rates, ok :=
+			settings.OtherParams[partitionIndex].IntParams["transitions_from_"+strconv.Itoa(i)]
+		if !ok {
+			break
+		}
+		s.rateSlices = append(s.rateSlices, []int{ratesTotal, ratesTotal + len(rates)})
+		i += 1
+		ratesTotal += len(rates)
+	}
+	s.transitionRatesIndex =
+		int(settings.OtherParams[partitionIndex].IntParams["transition_rates_partition_index"][0])
 }
 
 func (s *SimpleStateTransitionIteration) Iterate(
@@ -60,8 +55,9 @@ func (s *SimpleStateTransitionIteration) Iterate(
 	cumulative := timestepsHistory.NextIncrement
 	cumulatives := make([]float64, 0)
 	cumulatives = append(cumulatives, cumulative)
-	transitionRates :=
-		stateHistories[s.transitionRateIndices[int(state[0])]].Values.RawRowView(0)
+	slices := s.rateSlices[int(state[0])]
+	transitionRates := params.FloatParams["partition_"+
+		strconv.Itoa(s.transitionRatesIndex)][slices[0]:slices[1]]
 	for _, rate := range transitionRates {
 		cumulative += 1.0 / rate
 		cumulatives = append(cumulatives, cumulative)
