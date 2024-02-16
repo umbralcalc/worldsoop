@@ -1,4 +1,4 @@
-package archetypes
+package iterations
 
 import (
 	"testing"
@@ -6,23 +6,16 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestHistogramNodeIteration(t *testing.T) {
+func TestStateTransitionIteration(t *testing.T) {
 	t.Run(
-		"test that the histogram node iteration runs",
+		"test that the state transition iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./histogram_node_config.yaml")
+				simulator.LoadSettingsFromYaml("./state_transition_config.yaml")
 			iterations := [][]simulator.Iteration{
 				{
 					&simulator.ConstantValuesIteration{},
 					&StateTransitionIteration{},
-				},
-				{
-					&simulator.ConstantValuesIteration{},
-					&StateTransitionIteration{},
-				},
-				{
-					&HistogramNodeIteration{},
 				},
 			}
 			index := 0

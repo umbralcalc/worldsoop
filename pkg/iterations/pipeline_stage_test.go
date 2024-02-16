@@ -1,4 +1,4 @@
-package archetypes
+package iterations
 
 import (
 	"testing"
@@ -6,16 +6,32 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestStateTransitionIteration(t *testing.T) {
+func TestPipelineStageIteration(t *testing.T) {
 	t.Run(
-		"test that the state transition iteration runs",
+		"test that the pipeline stage iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./state_transition_config.yaml")
+				simulator.LoadSettingsFromYaml("./pipeline_stage_config.yaml")
 			iterations := [][]simulator.Iteration{
 				{
 					&simulator.ConstantValuesIteration{},
-					&StateTransitionIteration{},
+					&simulator.ConstantValuesIteration{},
+					&PipelineStageIteration{},
+				},
+				{
+					&simulator.ConstantValuesIteration{},
+					&simulator.ConstantValuesIteration{},
+					&PipelineStageIteration{},
+				},
+				{
+					&simulator.ConstantValuesIteration{},
+					&simulator.ConstantValuesIteration{},
+					&PipelineStageIteration{},
+				},
+				{
+					&simulator.ConstantValuesIteration{},
+					&simulator.ConstantValuesIteration{},
+					&PipelineStageIteration{},
 				},
 			}
 			index := 0

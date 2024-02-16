@@ -1,4 +1,4 @@
-package archetypes
+package iterations
 
 import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
