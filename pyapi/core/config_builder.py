@@ -46,7 +46,7 @@ class StochadexSettingsConfig:
 
 @dataclass
 class SimulatorImplementationsConfig:
-    iterations: list[str]
+    iterations: list[list[str]]
     output_condition: str
     output_function: str
     termination_condition: str
@@ -63,14 +63,16 @@ class AgentConfig:
 @dataclass
 class StochadexImplementationsConfig:
     simulator: SimulatorImplementationsConfig
-    agents: list[AgentConfig]
+    agent_by_partition: dict[int, AgentConfig]
     extra_vars_by_package: list[dict[str, list[dict[str, str]]]]
 
     @classmethod
     def from_yaml(cls, filename: Path) -> "StochadexImplementationsConfig":
         data = load_yaml(filename)
         data["simulator"] = SimulatorImplementationsConfig(**data["simulator"])
-        data["agents"] = [AgentConfig(**c) for c in data["agents"]]
+        data["agent_by_partition"] = {
+            p: AgentConfig(**c) for p, c in data["agent_by_partition"].items()
+        }
         return cls(**data)
 
 

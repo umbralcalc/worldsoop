@@ -36,7 +36,7 @@ def main():
     )
     implementations = StochadexImplementationsConfig(
         simulator=SimulatorImplementationsConfig(
-            iterations=[r"firstWienerProcess", r"secondWienerProcess"],
+            iterations=[[r"firstWienerProcess"], [r"secondWienerProcess"]],
             output_condition=r"&simulator.EveryStepOutputCondition{}",
             output_function=r"&simulator.StdoutOutputFunction{}",
             termination_condition=(
@@ -44,7 +44,7 @@ def main():
             ),
             timestep_function=r"&simulator.ConstantTimestepFunction{Stepsize: 1.0}",
         ),
-        agents=[],
+        agent_by_partition={},
         extra_vars_by_package=[
             {
                 "github.com/umbralcalc/stochadex/pkg/phenomena": [

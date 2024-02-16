@@ -43,7 +43,7 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
 @pytest.fixture
 def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
-        iterations=[r"firstWienerProcess", r"secondWienerProcess"],
+        iterations=[[r"firstWienerProcess"], [r"secondWienerProcess"]],
         output_condition=r"&simulator.EveryStepOutputCondition{}",
         output_function=r"&simulator.NilOutputFunction{}",
         termination_condition=(
@@ -69,7 +69,7 @@ def stochadex_implementations_config(
 ) -> StochadexImplementationsConfig:
     return StochadexImplementationsConfig(
         simulator=simulator_implementations_config,
-        agents=[agent_config, agent_config],
+        agent_by_partition={0: agent_config, 1: agent_config},
         extra_vars_by_package=[
             {
                 "github.com/umbralcalc/stochadex/pkg/phenomena": [
