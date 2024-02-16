@@ -8,14 +8,14 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
-// SimpleStateTransitionIteration
-type SimpleStateTransitionIteration struct {
+// StateTransitionIteration
+type StateTransitionIteration struct {
 	unitUniformDist      *distuv.Uniform
 	transitionRatesIndex int
 	rateSlices           [][]int
 }
 
-func (s *SimpleStateTransitionIteration) Configure(
+func (s *StateTransitionIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
@@ -44,7 +44,7 @@ func (s *SimpleStateTransitionIteration) Configure(
 		int(settings.OtherParams[partitionIndex].IntParams["transition_rates_partition_index"][0])
 }
 
-func (s *SimpleStateTransitionIteration) Iterate(
+func (s *StateTransitionIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,

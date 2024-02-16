@@ -3,27 +3,22 @@ package archetypes
 import (
 	"testing"
 
+	"github.com/umbralcalc/stochadex/pkg/phenomena"
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestDistributedStateNetworkIteration(t *testing.T) {
+func TestWeightedPointIteration(t *testing.T) {
 	t.Run(
-		"test that the distributed state network iteration runs",
+		"test that the weighted point iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./distributed_state_networks_config.yaml")
+				simulator.LoadSettingsFromYaml("./weighted_point_config.yaml")
 			iterations := [][]simulator.Iteration{
-				{
-					&simulator.ConstantValuesIteration{},
-					&SimpleStateTransitionIteration{},
-				},
-				{
-					&simulator.ConstantValuesIteration{},
-					&SimpleStateTransitionIteration{},
-				},
-				{
-					&NodeStateHistogramIteration{},
-				},
+				{&WeightedPointIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
+				{&phenomena.WienerProcessIteration{}},
 			}
 			index := 0
 			for _, serialIterations := range iterations {
@@ -39,9 +34,7 @@ func TestDistributedStateNetworkIteration(t *testing.T) {
 				TerminationCondition: &simulator.NumberOfStepsTerminationCondition{
 					MaxNumberOfSteps: 100,
 				},
-				TimestepFunction: simulator.NewExponentialDistributionTimestepFunction(
-					2.0, settings.Seeds[0],
-				),
+				TimestepFunction: &simulator.ConstantTimestepFunction{Stepsize: 1.0},
 			}
 			coordinator := simulator.NewPartitionCoordinator(
 				settings,

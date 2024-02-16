@@ -6,16 +6,16 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestSimpleStateTransitionIteration(t *testing.T) {
+func TestStateTransitionIteration(t *testing.T) {
 	t.Run(
-		"test that the simple state transition iteration runs",
+		"test that the state transition iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./simple_state_transitions_config.yaml")
+				simulator.LoadSettingsFromYaml("./state_transition_config.yaml")
 			iterations := [][]simulator.Iteration{
 				{
 					&simulator.ConstantValuesIteration{},
-					&SimpleStateTransitionIteration{},
+					&StateTransitionIteration{},
 				},
 			}
 			index := 0

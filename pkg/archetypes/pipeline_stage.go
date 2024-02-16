@@ -27,12 +27,10 @@ func (p *PipelineStageIteration) Configure(
 		Max: 1.0,
 		Src: rand.NewSource(seed),
 	}
-	k := "downstream_flow_rates_partition_index"
-	p.downstreamFlowRatesIndex =
-		int(settings.OtherParams[partitionIndex].IntParams[k][0])
-	k = "object_dispatch_probs_partition_index"
-	p.dispatchProbsIndex =
-		int(settings.OtherParams[partitionIndex].IntParams[k][0])
+	p.downstreamFlowRatesIndex = int(settings.OtherParams[partitionIndex].
+		IntParams["downstream_flow_rates_partition_index"][0])
+	p.dispatchProbsIndex = int(settings.OtherParams[partitionIndex].
+		IntParams["object_dispatch_probs_partition_index"][0])
 }
 
 func (p *PipelineStageIteration) Iterate(
@@ -43,11 +41,13 @@ func (p *PipelineStageIteration) Iterate(
 ) []float64 {
 	state := make([]float64, 0)
 	state = append(state, stateHistories[partitionIndex].Values.RawRowView(0)...)
-	for _, index := range params.IntParams["upstream_partitions"] {
+	for i, index := range params.IntParams["upstream_partitions"] {
 		stateHistory := stateHistories[int(index)]
-		if int(stateHistory.Values.At(0, stateHistory.StateWidth-1)) ==
+		if int(stateHistory.Values.At(0,
+			int(params.IntParams["incoming_partition_state_values"][i]))) ==
 			partitionIndex {
-			state[int(stateHistory.Values.At(0, stateHistory.StateWidth-2))] += 1
+			state[int(stateHistory.Values.At(0,
+				int(params.IntParams["incoming_object_state_values"][i])))] += 1
 		}
 	}
 	cumulative := timestepsHistory.NextIncrement

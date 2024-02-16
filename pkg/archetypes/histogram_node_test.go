@@ -3,22 +3,27 @@ package archetypes
 import (
 	"testing"
 
-	"github.com/umbralcalc/stochadex/pkg/phenomena"
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestDynamicSpatialFieldIteration(t *testing.T) {
+func TestHistogramNodeIteration(t *testing.T) {
 	t.Run(
-		"test that the dynamic spatial field iteration runs",
+		"test that the histogram node iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./dynamic_spatial_fields_config.yaml")
+				simulator.LoadSettingsFromYaml("./histogram_node_config.yaml")
 			iterations := [][]simulator.Iteration{
-				{&SpatialFieldPointIteration{}},
-				{&phenomena.WienerProcessIteration{}},
-				{&phenomena.WienerProcessIteration{}},
-				{&phenomena.WienerProcessIteration{}},
-				{&phenomena.WienerProcessIteration{}},
+				{
+					&simulator.ConstantValuesIteration{},
+					&StateTransitionIteration{},
+				},
+				{
+					&simulator.ConstantValuesIteration{},
+					&StateTransitionIteration{},
+				},
+				{
+					&HistogramNodeIteration{},
+				},
 			}
 			index := 0
 			for _, serialIterations := range iterations {
@@ -34,7 +39,9 @@ func TestDynamicSpatialFieldIteration(t *testing.T) {
 				TerminationCondition: &simulator.NumberOfStepsTerminationCondition{
 					MaxNumberOfSteps: 100,
 				},
-				TimestepFunction: &simulator.ConstantTimestepFunction{Stepsize: 1.0},
+				TimestepFunction: simulator.NewExponentialDistributionTimestepFunction(
+					2.0, settings.Seeds[0],
+				),
 			}
 			coordinator := simulator.NewPartitionCoordinator(
 				settings,

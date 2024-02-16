@@ -6,12 +6,12 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-func TestMultiStagePipelineIteration(t *testing.T) {
+func TestPipelineStageIteration(t *testing.T) {
 	t.Run(
-		"test that the multi-stage pipeline iteration runs",
+		"test that the pipeline stage iteration runs",
 		func(t *testing.T) {
 			settings :=
-				simulator.LoadSettingsFromYaml("./multi_stage_pipelines_config.yaml")
+				simulator.LoadSettingsFromYaml("./pipeline_stage_config.yaml")
 			iterations := [][]simulator.Iteration{
 				{
 					&simulator.ConstantValuesIteration{},

@@ -5,17 +5,17 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// SpatialFieldPointIteration
-type SpatialFieldPointIteration struct {
+// WeightedPointIteration
+type WeightedPointIteration struct {
 }
 
-func (s *SpatialFieldPointIteration) Configure(
+func (w *WeightedPointIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
 }
 
-func (s *SpatialFieldPointIteration) Iterate(
+func (w *WeightedPointIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,

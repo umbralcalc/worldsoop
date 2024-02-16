@@ -4,17 +4,17 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-// NodeStateHistogramIteration
-type NodeStateHistogramIteration struct {
+// HistogramNodeIteration
+type HistogramNodeIteration struct {
 }
 
-func (n *NodeStateHistogramIteration) Configure(
+func (h *HistogramNodeIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
 }
 
-func (n *NodeStateHistogramIteration) Iterate(
+func (h *HistogramNodeIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,
