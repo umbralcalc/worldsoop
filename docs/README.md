@@ -4,7 +4,7 @@
 
 # Go/Python API
 
-A Go/Python API for building and training decision-making algorithms in realistic simulation environments.
+A Go/Python API for building and training decision-making algorithms in realistic simulation environments. The core motivations for (and design ideas behind) this software originate from this open source book: [Worlds of Observation](https://umbralcalc.github.io/worlds-of-observation/).
 
 ## Quickstart notes
 
