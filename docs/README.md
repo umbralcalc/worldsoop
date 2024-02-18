@@ -8,7 +8,14 @@ A Go/Python API for building and training decision-making algorithms in realisti
 
 ## Quickstart notes
 
-1. Get the python environment sorted
+1. Build the Go binary
+
+```bash
+go mod tidy
+go build -o bin/ ./cmd/worldsoop
+```
+
+2. Get the python environment sorted
 
 ```bash
 python3 -m venv venv
@@ -16,13 +23,6 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 export WORLDSOOP_PATH=/your/path/to/worldsoop
 export PYTHONPATH=${PYTHONPATH}:${WORLDSOOP_PATH}
-```
-
-2. Build the Go binary
-
-```bash
-go mod tidy
-go build -o bin/ ./cmd/worldsoop
 ```
 
 3. Run some examples...
