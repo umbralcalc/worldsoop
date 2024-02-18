@@ -1,5 +1,11 @@
 import pytest
 
+from pyapi.core.implementation_wrappers import (
+    OutputCondition,
+    OutputFunction,
+    TerminationCondition,
+    TimestepFunction,
+)
 from pyapi.core.config_builder import (
     StochadexSettingsConfig,
     SimulatorImplementationsConfig,
@@ -44,12 +50,10 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
 def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
         iterations=[[r"firstWienerProcess"], [r"secondWienerProcess"]],
-        output_condition=r"&simulator.EveryStepOutputCondition{}",
-        output_function=r"&simulator.NilOutputFunction{}",
-        termination_condition=(
-            r"&simulator.NumberOfStepsTerminationCondition{MaxNumberOfSteps: 100}"
-        ),
-        timestep_function=r"&simulator.ConstantTimestepFunction{Stepsize: 1.0}",
+        output_condition=OutputCondition.every_step(),
+        output_function=OutputFunction.nil(),
+        termination_condition=TerminationCondition.number_of_steps(100),
+        timestep_function=TimestepFunction.constant(1.0),
     )
 
 
