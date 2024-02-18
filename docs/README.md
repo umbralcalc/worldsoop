@@ -8,7 +8,7 @@ A Go/Python API for building and training decision-making algorithms in realisti
 
 ## Quickstart notes
 
-1. Build the Go binary
+1. Build the Go binary (needs [Go to be installed](https://go.dev/doc/install))
 
 ```bash
 go mod tidy
