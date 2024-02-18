@@ -83,3 +83,47 @@ class TimestepFunction(Enum):
             return self.value
         else:
             return self.value(*args)
+
+
+class StochadexIterations(Enum):
+    package = ""
+    constant_values = r"&simulator.ConstantValuesIteration{}"
+
+    def __call__(self, *args) -> str:
+        if len(args) == 0:
+            return self.value
+        else:
+            return self.value(*args)
+
+
+class StochadexPhenomena(Enum):
+    package = "github.com/umbralcalc/stochadex/pkg/phenomena"
+    wiener_process = r"&phenomena.WienerProcessIteration{}"
+    poisson_process = r"&phenomena.PoissonProcessIteration{}"
+    compound_poisson_process = r"&phenomena.CompoundPoissonProcessIteration{}"
+    cox_process = r"&phenomena.CoxProcessIteration{}"
+    drift_diffusion = r"&phenomena.DriftDiffusionIteration{}"
+    fractional_brownian_motion = r"&phenomena.FractionalBrownianMotionIteration{}"
+    geometric_brownian_motion = r"&phenomena.GeometricBrownianMotionIteration{}"
+    hawkes_process = r"&phenomena.HawkesProcessIteration{}"
+    ornstein_uhlenbeck = r"&phenomena.OrnsteinUhlenbeckIteration{}"
+
+    def __call__(self, *args) -> str:
+        if len(args) == 0:
+            return self.value
+        else:
+            return self.value(*args)
+
+
+class WorldsoopIterations(Enum):
+    package = "github.com/worldsoop/worldsoop/pkg/iterations"
+    histogram_node = r"&iterations.HistogramNodeIteration{}"
+    pipeline_stage = r"&iterations.PipelineStageIteration{}"
+    state_transition = r"&iterations.StateTransitionIteration{}"
+    weighted_point = r"&iterations.WeightedPointIteration{}"
+
+    def __call__(self, *args) -> str:
+        if len(args) == 0:
+            return self.value
+        else:
+            return self.value(*args)

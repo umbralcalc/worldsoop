@@ -4,6 +4,7 @@ from pyapi.core.implementation_wrappers import (
     OutputFunction,
     TerminationCondition,
     TimestepFunction,
+    StochadexPhenomena,
 )
 from pyapi.core.config_builder import (
     OtherParams,
@@ -42,7 +43,7 @@ def main():
     )
     implementations = StochadexImplementationsConfig(
         simulator=SimulatorImplementationsConfig(
-            iterations=[[r"firstWienerProcess"], [r"secondWienerProcess"]],
+            iterations=[["firstWienerProcess"], ["secondWienerProcess"]],
             output_condition=OutputCondition.every_step(),
             output_function=OutputFunction.stdout(),
             termination_condition=TerminationCondition.number_of_steps(100),
@@ -51,11 +52,11 @@ def main():
         agent_by_partition={},
         extra_vars_by_package=[
             {
-                "github.com/umbralcalc/stochadex/pkg/phenomena": [
-                    {"firstWienerProcess": r"&phenomena.WienerProcessIteration{}"},
-                    {"secondWienerProcess": r"&phenomena.WienerProcessIteration{}"},
+                StochadexPhenomena.package(): [
+                    {"firstWienerProcess": StochadexPhenomena.wiener_process()},
+                    {"secondWienerProcess": StochadexPhenomena.wiener_process()},
                 ],
-            }
+            },
         ],
     )
     config = WorldsoopConfig(

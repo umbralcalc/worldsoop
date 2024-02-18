@@ -5,6 +5,7 @@ from pyapi.core.implementation_wrappers import (
     OutputFunction,
     TerminationCondition,
     TimestepFunction,
+    StochadexPhenomena,
 )
 from pyapi.core.config_builder import (
     StochadexSettingsConfig,
@@ -49,7 +50,7 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
 @pytest.fixture
 def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
-        iterations=[[r"firstWienerProcess"], [r"secondWienerProcess"]],
+        iterations=[["firstWienerProcess"], ["secondWienerProcess"]],
         output_condition=OutputCondition.every_step(),
         output_function=OutputFunction.nil(),
         termination_condition=TerminationCondition.number_of_steps(100),
@@ -76,9 +77,9 @@ def stochadex_implementations_config(
         agent_by_partition={0: agent_config, 1: agent_config},
         extra_vars_by_package=[
             {
-                "github.com/umbralcalc/stochadex/pkg/phenomena": [
-                    {"firstWienerProcess": r"&phenomena.WienerProcessIteration{}"},
-                    {"secondWienerProcess": r"&phenomena.WienerProcessIteration{}"},
+                StochadexPhenomena.package(): [
+                    {"firstWienerProcess": StochadexPhenomena.wiener_process()},
+                    {"secondWienerProcess": StochadexPhenomena.wiener_process()},
                 ],
             }
         ],
