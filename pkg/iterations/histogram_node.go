@@ -4,7 +4,8 @@ import (
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-// HistogramNodeIteration
+// HistogramNodeIteration collects the frequencies of states being occupied
+// by all of the specified connected partitions over the latest step in the state history.
 type HistogramNodeIteration struct {
 }
 

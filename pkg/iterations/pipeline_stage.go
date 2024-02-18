@@ -8,7 +8,9 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
-// PipelineStageIteration
+// PipelineStageIteration evolves a table of object counts as its state as
+// well as both checking for objects entering and indicating that objects
+// are leaving this stage for another one of an overall pipeline.
 type PipelineStageIteration struct {
 	unitUniformDist          *distuv.Uniform
 	downstreamFlowRatesIndex int

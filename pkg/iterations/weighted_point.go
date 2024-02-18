@@ -5,7 +5,8 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// WeightedPointIteration
+// WeightedPointIteration computed the weighted sample average for each state vector
+// element across all of the neighbouring partitions.
 type WeightedPointIteration struct {
 }
 

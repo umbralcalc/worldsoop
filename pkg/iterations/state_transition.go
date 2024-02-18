@@ -8,7 +8,8 @@ import (
 	"gonum.org/v1/gonum/stat/distuv"
 )
 
-// StateTransitionIteration
+// StateTransitionIteration is essentially a state machine which transitions
+// between states according to the event rate parameters.
 type StateTransitionIteration struct {
 	unitUniformDist      *distuv.Uniform
 	transitionRatesIndex int
