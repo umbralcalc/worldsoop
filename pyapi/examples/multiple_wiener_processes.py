@@ -1,5 +1,5 @@
 from pyapi.core.spawn_processes import spawn_worldsoop_processes_from_configs
-from pyapi.core.config_wrappers import (
+from pyapi.core.implementation_wrappers import (
     OutputCondition,
     OutputFunction,
     TerminationCondition,
