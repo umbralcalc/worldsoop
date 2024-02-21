@@ -1,37 +1,42 @@
 package observations
 
 import (
+	"math"
+	"strconv"
+
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
-type DynamicMaskStateObservation struct {
-	maskIndex int
+type DynamicMaskStateObservationIteration struct {
+	partitionToObserve int
+	maskPartition      int
 }
 
-func (d *DynamicMaskStateObservation) Configure(
+func (d *DynamicMaskStateObservationIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
-	d.maskIndex = int(settings.OtherParams[partitionIndex].
-		IntParams["trigger_observation_partition"][0])
+	d.maskPartition = int(settings.OtherParams[partitionIndex].
+		IntParams["mask_partition"][0])
+	d.partitionToObserve = int(settings.OtherParams[partitionIndex].
+		IntParams["partition_to_observe"][0])
 }
 
-func (d *DynamicMaskStateObservation) Observe(
+func (d *DynamicMaskStateObservationIteration) Iterate(
 	params *simulator.OtherParams,
 	partitionIndex int,
 	stateHistories []*simulator.StateHistory,
 	timestepsHistory *simulator.CumulativeTimestepsHistory,
 ) []float64 {
 	outputValues := make([]float64, 0)
-	maskValues := stateHistories[d.maskIndex]
-	for i := 0; i < maskValues.StateWidth; i++ {
-		if maskValues.Values.At(0, i) == 0 {
+	maskValues := params.FloatParams["partition_"+strconv.Itoa(d.maskPartition)]
+	stateValues := params.FloatParams["partition_"+strconv.Itoa(d.partitionToObserve)]
+	for i, maskValue := range maskValues {
+		if maskValue == 0 {
+			outputValues = append(outputValues, math.NaN())
 			continue
 		}
-		outputValues = append(
-			outputValues,
-			stateHistories[partitionIndex].Values.At(0, i),
-		)
+		outputValues = append(outputValues, stateValues[i])
 	}
 	return outputValues
 }

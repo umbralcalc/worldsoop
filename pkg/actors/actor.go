@@ -1,5 +1,3 @@
-package generators
+package actors
 
-//  interactions.ActionGenerator
-// 	interactions.Action
-// 	interactions.Actor
+// interactions.Actor

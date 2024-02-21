@@ -3,7 +3,7 @@ module github.com/worldsoop/worldsoop
 go 1.21.6
 
 require (
-	github.com/umbralcalc/stochadex v0.0.0-20240216162949-d9532a6f6ad3
+	github.com/umbralcalc/stochadex v0.0.0-20240221140357-fe3a31ec7123
 	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a
 	gonum.org/v1/gonum v0.14.0
 )
