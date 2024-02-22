@@ -56,8 +56,7 @@ class SimulatorImplementationsConfig:
 @dataclass
 class AgentConfig:
     actor: str
-    generator: str
-    observation: str
+    generator_partition: int
 
 
 @dataclass
