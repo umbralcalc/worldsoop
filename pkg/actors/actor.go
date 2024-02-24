@@ -1,3 +1,0 @@
-package actors
-
-// interactions.Actor
