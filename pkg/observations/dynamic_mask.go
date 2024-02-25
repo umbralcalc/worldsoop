@@ -1,13 +1,13 @@
 package observations
 
 import (
-	"math"
 	"strconv"
 
 	"github.com/umbralcalc/stochadex/pkg/simulator"
 )
 
 type DynamicMaskStateObservationIteration struct {
+	nanValue           float64
 	partitionToObserve int
 	maskPartition      int
 }
@@ -16,6 +16,8 @@ func (d *DynamicMaskStateObservationIteration) Configure(
 	partitionIndex int,
 	settings *simulator.Settings,
 ) {
+	d.nanValue = settings.OtherParams[partitionIndex].
+		FloatParams["nan_value"][0]
 	d.maskPartition = int(settings.OtherParams[partitionIndex].
 		IntParams["mask_partition"][0])
 	d.partitionToObserve = int(settings.OtherParams[partitionIndex].
@@ -33,7 +35,7 @@ func (d *DynamicMaskStateObservationIteration) Iterate(
 	stateValues := params.FloatParams["partition_"+strconv.Itoa(d.partitionToObserve)]
 	for i, maskValue := range maskValues {
 		if maskValue == 0 {
-			outputValues = append(outputValues, math.NaN())
+			outputValues = append(outputValues, d.nanValue)
 			continue
 		}
 		outputValues = append(outputValues, stateValues[i])
