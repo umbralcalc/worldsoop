@@ -2,9 +2,21 @@
 <img src="./assets/web-heading.png" width="400"/>
 </p>
 
-# Go/Python API
+## Software to build more realistic environments for machine learning systems
 
-A Go/Python API for building and training decision-making algorithms in realistic simulation environments.
+Welcome to the **WorldsOOp Go/Python API**! This is a Go/Python API for building and training decision-making algorithms in realistic simulation environments. The goals I'm aiming to achieve with this software are:
+- To empower users in creating more realistic environments for machine learning systems to train on and test against.
+- To create mini-games for human users to play with and learn about the real-world problems they represent.
+
+## Core principles
+
+_State observation should not be 'easy'._
+
+These challenging environments have been designed to reflect the difficulties with handling more realistic datasets, as well as the partial state observability that is nearly always the case when working on problems in the real world.
+
+_Realism can be gamified._
+
+Access to real data for the systems that matter is often restricted. We want to circumvent this barrier to generalisation research into practical ML systems by generating it from environments instead. Nothing replaces a real dataset; but we can always try to emulate how messy it gets while still knowing the ground truth!
 
 ## Quickstart notes
 
