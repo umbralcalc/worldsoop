@@ -1,129 +1,278 @@
 from enum import Enum
-from functools import partial
+from dataclasses import dataclass
 
-def every_n_steps(steps: int) -> str:
-    return r"&simulator.EveryNStepsOutputCondition{N: " + str(steps) + r"}"
+@dataclass
+class NilOutputCondition:
+    def to_yaml(self) -> str:
+        return r"&simulator.NilOutputCondition{}"
+
+@dataclass
+class EveryStepOutputCondition:
+    def to_yaml(self) -> str:
+        return r"&simulator.EveryStepOutputCondition{}"
+
+@dataclass
+class EveryNStepsOutputCondition:
+    steps: int
+
+    def to_yaml(self) -> str:
+        return r"&simulator.EveryNStepsOutputCondition{N: " + str(self.steps) + r"}"
 
 
-class OutputCondition(Enum):
-    nil = r"&simulator.NilOutputCondition{}"
-    every_step = r"&simulator.EveryStepOutputCondition{}"
-    every_n_steps = partial(every_n_steps)
+class CallableYamlEnum(Enum):
+    def __call__(self, **kwargs):
+        self.kwargs = kwargs
+        return self
 
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
+    def to_yaml(self) -> str:
+        return (
+            self.value(**self.kwargs).to_yaml() 
+            if hasattr(self, "kwargs") 
+            else self.value.to_yaml()
+        )
+
+
+class OutputCondition(CallableYamlEnum):
+    nil = NilOutputCondition
+    every_step = EveryStepOutputCondition
+    every_n_steps = EveryNStepsOutputCondition
+
+@dataclass
+class NilOutputFunction:
+    def to_yaml(self) -> str:
+        return r"&simulator.NilOutputFunction{}"   
+
+@dataclass
+class StdoutOutputFunction:
+    def to_yaml(self) -> str:
+        return r"&simulator.StdoutOutputFunction{}"
+    
+@dataclass
+class VariableStoreOutputFunction:
+    def to_yaml(self) -> str:
+        return r"&simulator.VariableStoreOutputFunction{}"
+
+
+class OutputFunction(CallableYamlEnum):
+    nil = NilOutputFunction
+    stdout = StdoutOutputFunction
+    variable_store = VariableStoreOutputFunction
+
+
+@dataclass
+class NumberOfStepsTerminationCondition:
+    max_number_of_steps: int
+
+    def to_yaml(self) -> str:
+        return (
+            r"&simulator.NumberOfStepsTerminationCondition{MaxNumberOfSteps: "
+            + str(self.max_number_of_steps)
+            + r"}"
+        )
+
+
+@dataclass
+class TimeElapsedTerminationCondition:
+    max_time_elapsed: int
+
+    def to_yaml(self) -> str:
+        return (
+            r"&simulator.TimeElapsedTerminationCondition{MaxTimeElapsed: "
+            + str(self.max_time_elapsed)
+            + r"}"
+        )
+
+
+class TerminationCondition(CallableYamlEnum):
+    number_of_steps = NumberOfStepsTerminationCondition
+    time_elapsed = TimeElapsedTerminationCondition
     
 
-class OutputFunction(Enum):
-    nil = r"&simulator.NilOutputFunction{}"
-    stdout = r"&simulator.StdoutOutputFunction{}"
-    variable_store = r"&simulator.VariableStoreOutputFunction{}"
+@dataclass
+class ConstantTimestepFunction:
+    stepsize: float
 
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
-
-
-def number_of_steps(max_number_of_steps: int) -> str:
-    return (
-        r"&simulator.NumberOfStepsTerminationCondition{MaxNumberOfSteps: "
-        + str(max_number_of_steps)
-        + r"}"
-    )
-
-
-def time_elapsed(max_time_elapsed: float) -> str:
-    return (
-        r"&simulator.TimeElapsedTerminationCondition{MaxTimeElapsed: "
-        + str(max_time_elapsed)
-        + r"}"
-    )
-
-
-class TerminationCondition(Enum):
-    number_of_steps = partial(number_of_steps)
-    time_elapsed = partial(time_elapsed)
-
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
-    
-
-def constant(stepsize: float) -> str:
-    return (
+    def to_yaml(self) -> str:
+        return (
         r"&simulator.ConstantTimestepFunction{Stepsize: " 
-        + str(stepsize) 
+        + str(self.stepsize) 
         + r"}"
     )
 
 
-def exponential_distribution(mean: float, seed: int) -> str:
-    return (
-        r"simulator.NewExponentialDistributionTimestepFunction("
-        + str(mean) 
-        + r", "
-        + str(seed)
-        + r")"
-    )
+@dataclass
+class ExponentialDistributionTimestepFunction:
+    mean: float
+    seed: int
+
+    def to_yaml(self) -> str:
+        return (
+            r"simulator.NewExponentialDistributionTimestepFunction("
+            + str(self.mean) 
+            + r", "
+            + str(self.seed)
+            + r")"
+        )
 
 
-class TimestepFunction(Enum):
-    constant = partial(constant)
-    exponential_distribution = partial(exponential_distribution)
-
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
+class TimestepFunction(CallableYamlEnum):
+    constant = ConstantTimestepFunction
+    exponential_distribution = ExponentialDistributionTimestepFunction
 
 
-class StochadexIterations(Enum):
-    package = ""
-    constant_values = r"&simulator.ConstantValuesIteration{}"
+@dataclass
+class ConstantValuesIteration:
+    def to_yaml(self) -> str:
+        return r"&simulator.ConstantValuesIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return ""
+    
 
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
+@dataclass
+class WienerProcessIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.WienerProcessIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+    
+
+@dataclass
+class PoissonProcessIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.PoissonProcessIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+    
+
+@dataclass
+class CompoundPoissonProcessIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.CompoundPoissonProcessIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
 
 
-class StochadexPhenomena(Enum):
-    package = "github.com/umbralcalc/stochadex/pkg/phenomena"
-    wiener_process = r"&phenomena.WienerProcessIteration{}"
-    poisson_process = r"&phenomena.PoissonProcessIteration{}"
-    compound_poisson_process = r"&phenomena.CompoundPoissonProcessIteration{}"
-    cox_process = r"&phenomena.CoxProcessIteration{}"
-    drift_diffusion = r"&phenomena.DriftDiffusionIteration{}"
-    fractional_brownian_motion = r"&phenomena.FractionalBrownianMotionIteration{}"
-    geometric_brownian_motion = r"&phenomena.GeometricBrownianMotionIteration{}"
-    hawkes_process = r"&phenomena.HawkesProcessIteration{}"
-    ornstein_uhlenbeck = r"&phenomena.OrnsteinUhlenbeckIteration{}"
-
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
+@dataclass
+class CoxProcessIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.CoxProcessIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
 
 
-class WorldsoopIterations(Enum):
-    package = "github.com/worldsoop/worldsoop/pkg/iterations"
-    histogram_node = r"&iterations.HistogramNodeIteration{}"
-    pipeline_stage = r"&iterations.PipelineStageIteration{}"
-    state_transition = r"&iterations.StateTransitionIteration{}"
-    weighted_point = r"&iterations.WeightedPointIteration{}"
+@dataclass
+class DriftDiffusionIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.DriftDiffusionIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
 
-    def __call__(self, *args) -> str:
-        if len(args) == 0:
-            return self.value
-        else:
-            return self.value(*args)
+
+@dataclass
+class FractionalBrownianMotionIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.FractionalBrownianMotionIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class GeometricBrownianMotionIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.GeometricBrownianMotionIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class HawkesProcessIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.HawkesProcessIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class OrnsteinUhlenbeckIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.OrnsteinUhlenbeckIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class HistogramNodeIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.HistogramNodeIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class PipelineStageIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.PipelineStageIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+@dataclass
+class StateTransitionIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.StateTransitionIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+
+@dataclass
+class WeightedMeanIteration:
+    def to_yaml(self) -> str:
+        return r"&phenomena.WeightedMeanIteration{}"
+    
+    @staticmethod
+    def package() -> str:
+        return "github.com/umbralcalc/stochadex/pkg/phenomena"
+
+
+class StochadexIteration(CallableYamlEnum):
+    constant_values = ConstantValuesIteration
+    wiener_process = WienerProcessIteration
+    poisson_process = PoissonProcessIteration
+    compound_poisson_process = CompoundPoissonProcessIteration
+    cox_process = CoxProcessIteration
+    drift_diffusion = DriftDiffusionIteration
+    fractional_brownian_motion = FractionalBrownianMotionIteration
+    geometric_brownian_motion = GeometricBrownianMotionIteration
+    hawkes_process = HawkesProcessIteration
+    ornstein_uhlenbeck = OrnsteinUhlenbeckIteration
+    histogram_node = HistogramNodeIteration
+    pipeline_stage = PipelineStageIteration
+    state_transition = StateTransitionIteration
+    weighted_mean = WeightedMeanIteration

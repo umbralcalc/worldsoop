@@ -5,12 +5,12 @@ from pyapi.core.implementation_wrappers import (
     OutputFunction,
     TerminationCondition,
     TimestepFunction,
-    StochadexPhenomena,
+    StochadexIteration,
 )
 from pyapi.core.config_builder import (
+    StochadexPartition,
     StochadexSettingsConfig,
     SimulatorImplementationsConfig,
-    AgentConfig,
     StochadexImplementationsConfig,
     OtherParams,
 )
@@ -28,34 +28,19 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
             ),
             OtherParams(
                 float_params={
-                    "observation_noise_variances": [0.5, 0.5, 0.5, 0.5, 0.5],
-                },
-                int_params={
-                    "partition_to_observe": [0],
-                },
-            ),
-            OtherParams(
-                float_params={},
-                int_params={},
-            ),
-            OtherParams(
-                float_params={
                     "variances": [1.0, 1.0, 1.0],
-                    "observation_noise_variances": [0.5, 0.5, 0.5],
                 },
                 int_params={},
             ),
         ],
         init_state_values=[
             [0.45, 1.4, 0.01, -0.13, 0.7],
-            [0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.0],
             [0.01, -0.13, 0.7],
         ],
         init_time_value=0.0,
-        seeds=[4673, 1122, 342, 2531],
-        state_widths=[5, 5, 5, 3],
-        state_history_depths=[2, 2, 2, 2],
+        seeds=[4673, 2531],
+        state_widths=[5, 3],
+        state_history_depths=[2, 2],
         timesteps_history_depth=2,
     )
 
@@ -63,43 +48,32 @@ def stochadex_settings_config() -> StochadexSettingsConfig:
 @pytest.fixture
 def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
-        iterations=[
-            [
-                "firstWienerProcess",
-                r"&interactions.GaussianNoiseStateObservationIteration{}",
-                r"&interactions.DoNothingActionIteration{}",
-            ], 
-            ["secondWienerProcess"],
+        partitions=[
+            StochadexPartition(
+                iteration=StochadexIteration.wiener_process(),
+                params_by_upstream_partition={},
+            ),
+            StochadexPartition(
+                iteration=StochadexIteration.wiener_process(),
+                params_by_upstream_partition={},
+            ),
         ],
         output_condition=OutputCondition.every_step(),
         output_function=OutputFunction.nil(),
-        termination_condition=TerminationCondition.number_of_steps(100),
-        timestep_function=TimestepFunction.constant(1.0),
-    )
-
-
-@pytest.fixture
-def agent_config() -> AgentConfig:
-    return AgentConfig(
-        actor=r"&interactions.DoNothingActor{}",
-        generator_partition=2,
+        termination_condition=TerminationCondition.number_of_steps(
+            max_number_of_steps=100,
+        ),
+        timestep_function=TimestepFunction.constant(
+            stepsize=1.0,
+        ),
     )
 
 
 @pytest.fixture
 def stochadex_implementations_config(
     simulator_implementations_config,
-    agent_config,
 ) -> StochadexImplementationsConfig:
     return StochadexImplementationsConfig(
         simulator=simulator_implementations_config,
-        agent_by_partition={0: agent_config},
-        extra_vars_by_package=[
-            {
-                StochadexPhenomena.package(): [
-                    {"firstWienerProcess": StochadexPhenomena.wiener_process()},
-                    {"secondWienerProcess": StochadexPhenomena.wiener_process()},
-                ],
-            }
-        ],
+        extra_vars_by_package=[],
     )
