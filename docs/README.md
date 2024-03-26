@@ -4,7 +4,8 @@
 
 ## Software to build more realistic environments for machine learning systems
 
-Welcome to the **WorldsOOp Go/Python API**! This is an API for building and training decision-making algorithms in realistic simulation environments. The goals I'm aiming to achieve with this software are:
+Welcome to the **WorldsOOp Python API**! This is an API for building and training decision-making algorithms in realistic simulation environments. The goals I'm aiming to achieve with this software are:
+
 - To empower users in creating more realistic environments for machine learning systems to train on and test against.
 - To create mini-games for human users to play with and learn about the real-world problems they represent.
 

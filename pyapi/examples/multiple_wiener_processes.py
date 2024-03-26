@@ -1,15 +1,16 @@
 from pyapi.core.spawn_processes import spawn_worldsoop_processes_from_configs
 from pyapi.core.implementation_wrappers import (
-    OutputCondition,
-    OutputFunction,
-    TerminationCondition,
-    TimestepFunction,
-    StochadexPhenomena,
+    ConstantTimestepFunction,
+    EveryStepOutputCondition,
+    NumberOfStepsTerminationCondition,
+    StdoutOutputFunction,
+    WienerProcessIteration,
 )
 from pyapi.core.config_builder import (
     OtherParams,
     SimulatorImplementationsConfig,
     StochadexImplementationsConfig,
+    StochadexPartition,
     StochadexSettingsConfig,
     WorldsoopConfig,
 )
@@ -43,21 +44,24 @@ def main():
     )
     implementations = StochadexImplementationsConfig(
         simulator=SimulatorImplementationsConfig(
-            iterations=[["firstWienerProcess"], ["secondWienerProcess"]],
-            output_condition=OutputCondition.every_step(),
-            output_function=OutputFunction.stdout(),
-            termination_condition=TerminationCondition.number_of_steps(100),
-            timestep_function=TimestepFunction.constant(1.0),
+            partitions=[
+                StochadexPartition(
+                    iteration=WienerProcessIteration(),
+                    params_by_upstream_partition={},
+                ),
+                StochadexPartition(
+                    iteration=WienerProcessIteration(),
+                    params_by_upstream_partition={},
+                ),
+            ],
+            output_condition=EveryStepOutputCondition(),
+            output_function=StdoutOutputFunction(),
+            termination_condition=NumberOfStepsTerminationCondition(
+                max_number_of_steps=100,
+            ),
+            timestep_function=ConstantTimestepFunction(stepsize=1.0),
         ),
-        agent_by_partition={},
-        extra_vars_by_package=[
-            {
-                StochadexPhenomena.package(): [
-                    {"firstWienerProcess": StochadexPhenomena.wiener_process()},
-                    {"secondWienerProcess": StochadexPhenomena.wiener_process()},
-                ],
-            },
-        ],
+        extra_vars_by_package=[],
     )
     config = WorldsoopConfig(
         settings=settings,

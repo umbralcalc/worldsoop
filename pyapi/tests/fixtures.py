@@ -1,11 +1,11 @@
 import pytest
 
 from pyapi.core.implementation_wrappers import (
-    OutputCondition,
-    OutputFunction,
-    TerminationCondition,
-    TimestepFunction,
-    StochadexIteration,
+    ConstantTimestepFunction,
+    EveryStepOutputCondition,
+    NilOutputFunction,
+    NumberOfStepsTerminationCondition,
+    WienerProcessIteration,
 )
 from pyapi.core.config_builder import (
     StochadexPartition,
@@ -50,20 +50,20 @@ def simulator_implementations_config() -> SimulatorImplementationsConfig:
     return SimulatorImplementationsConfig(
         partitions=[
             StochadexPartition(
-                iteration=StochadexIteration.wiener_process(),
+                iteration=WienerProcessIteration(),
                 params_by_upstream_partition={},
             ),
             StochadexPartition(
-                iteration=StochadexIteration.wiener_process(),
+                iteration=WienerProcessIteration(),
                 params_by_upstream_partition={},
             ),
         ],
-        output_condition=OutputCondition.every_step(),
-        output_function=OutputFunction.nil(),
-        termination_condition=TerminationCondition.number_of_steps(
+        output_condition=EveryStepOutputCondition(),
+        output_function=NilOutputFunction(),
+        termination_condition=NumberOfStepsTerminationCondition(
             max_number_of_steps=100,
         ),
-        timestep_function=TimestepFunction.constant(
+        timestep_function=ConstantTimestepFunction(
             stepsize=1.0,
         ),
     )

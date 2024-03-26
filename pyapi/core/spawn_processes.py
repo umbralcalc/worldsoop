@@ -5,7 +5,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tempfile import _TemporaryFileWrapper
-from pyapi.core.config_builder import WorldsoopConfig, dump_temporary_yaml
+from pyapi.core.config_builder import WorldsoopConfig, dump_temporary_api_yaml
 
 
 @dataclass
@@ -44,15 +44,15 @@ def _update_futures_with_spawned_process(
     config: WorldsoopConfig,
     executor: ThreadPoolExecutor,
 ):
-    settings_file = dump_temporary_yaml(config.settings)
-    implementations_file = dump_temporary_yaml(config.implementations)
+    settings_file = dump_temporary_api_yaml(config.settings)
+    implementations_file = dump_temporary_api_yaml(config.implementations)
     args = WorldsoopProcessArgs(
         settings=Path(settings_file.name),
         implementations=Path(implementations_file.name),
     )
     dashboard_file: _TemporaryFileWrapper | None = None
     if config.dashboard:
-        dashboard_file = dump_temporary_yaml(config.dashboard)
+        dashboard_file = dump_temporary_api_yaml(config.dashboard)
         args.dashboard = Path(dashboard_file.name)
     futures[executor.submit(run_worldsoop_process, args)] = (
         index,

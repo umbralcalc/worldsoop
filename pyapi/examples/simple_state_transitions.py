@@ -1,16 +1,17 @@
 from pyapi.core.spawn_processes import spawn_worldsoop_processes_from_configs
 from pyapi.core.implementation_wrappers import (
-    OutputCondition,
-    OutputFunction,
-    StochadexIterations,
-    TerminationCondition,
-    TimestepFunction,
-    WorldsoopIterations,
+    ConstantValuesIteration,
+    EveryStepOutputCondition,
+    ExponentialDistributionTimestepFunction,
+    NumberOfStepsTerminationCondition,
+    StateTransitionIteration,
+    StdoutOutputFunction,
 )
 from pyapi.core.config_builder import (
     OtherParams,
     SimulatorImplementationsConfig,
     StochadexImplementationsConfig,
+    StochadexPartition,
     StochadexSettingsConfig,
     WorldsoopConfig,
 )
@@ -32,7 +33,6 @@ def main():
                     "transitions_from_3": [1],
                     "transitions_from_4": [3, 2],
                     "transitions_from_5": [1],
-                    "transition_rates_partition_index": [0],
                 },
             ),
         ],
@@ -48,27 +48,29 @@ def main():
     )
     implementations = StochadexImplementationsConfig(
         simulator=SimulatorImplementationsConfig(
-            iterations=[
-                ["constantValues", "stateTransition"], 
+            partitions=[
+                StochadexPartition(
+                    iteration=ConstantValuesIteration(),
+                    params_by_upstream_partition={},
+                ),
+                StochadexPartition(
+                    iteration=StateTransitionIteration(),
+                    params_by_upstream_partition={
+                        0: "transition_rates",
+                    },
+                ),
             ],
-            output_condition=OutputCondition.every_step(),
-            output_function=OutputFunction.stdout(),
-            termination_condition=TerminationCondition.number_of_steps(100),
-            timestep_function=TimestepFunction.exponential_distribution(1.0, 231),
+            output_condition=EveryStepOutputCondition(),
+            output_function=StdoutOutputFunction(),
+            termination_condition=NumberOfStepsTerminationCondition(
+                max_number_of_steps=100,
+            ),
+            timestep_function=ExponentialDistributionTimestepFunction(
+                mean=1.0, 
+                seed=231,
+            ),
         ),
-        agent_by_partition={},
-        extra_vars_by_package=[
-            {
-                StochadexIterations.package(): [
-                    {"constantValues": StochadexIterations.constant_values()},
-                ],
-            },
-            {
-                WorldsoopIterations.package(): [
-                    {"stateTransition": WorldsoopIterations.state_transition()},
-                ],
-            },
-        ],
+        extra_vars_by_package=[],
     )
     config = WorldsoopConfig(
         settings=settings,

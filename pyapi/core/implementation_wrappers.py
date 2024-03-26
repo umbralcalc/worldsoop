@@ -1,69 +1,62 @@
-from enum import Enum
+from abc import abstractmethod
 from dataclasses import dataclass
 
+
+class OutputCondition:
+    @abstractmethod
+    def to_api_str(self) -> str:
+        ...
+
 @dataclass
-class NilOutputCondition:
-    def to_yaml(self) -> str:
+class NilOutputCondition(OutputCondition):
+    def to_api_str(self) -> str:
         return r"&simulator.NilOutputCondition{}"
 
 @dataclass
-class EveryStepOutputCondition:
-    def to_yaml(self) -> str:
+class EveryStepOutputCondition(OutputCondition):
+    def to_api_str(self) -> str:
         return r"&simulator.EveryStepOutputCondition{}"
 
 @dataclass
-class EveryNStepsOutputCondition:
+class EveryNStepsOutputCondition(OutputCondition):
     steps: int
 
-    def to_yaml(self) -> str:
+    def to_api_str(self) -> str:
         return r"&simulator.EveryNStepsOutputCondition{N: " + str(self.steps) + r"}"
 
 
-class CallableYamlEnum(Enum):
-    def __call__(self, **kwargs):
-        self.kwargs = kwargs
-        return self
+class OutputFunction:
+    @abstractmethod
+    def to_api_str(self) -> str:
+        ...
 
-    def to_yaml(self) -> str:
-        return (
-            self.value(**self.kwargs).to_yaml() 
-            if hasattr(self, "kwargs") 
-            else self.value.to_yaml()
-        )
-
-
-class OutputCondition(CallableYamlEnum):
-    nil = NilOutputCondition
-    every_step = EveryStepOutputCondition
-    every_n_steps = EveryNStepsOutputCondition
 
 @dataclass
-class NilOutputFunction:
-    def to_yaml(self) -> str:
+class NilOutputFunction(OutputFunction):
+    def to_api_str(self) -> str:
         return r"&simulator.NilOutputFunction{}"   
 
 @dataclass
-class StdoutOutputFunction:
-    def to_yaml(self) -> str:
+class StdoutOutputFunction(OutputFunction):
+    def to_api_str(self) -> str:
         return r"&simulator.StdoutOutputFunction{}"
     
 @dataclass
-class VariableStoreOutputFunction:
-    def to_yaml(self) -> str:
+class VariableStoreOutputFunction(OutputFunction):
+    def to_api_str(self) -> str:
         return r"&simulator.VariableStoreOutputFunction{}"
 
 
-class OutputFunction(CallableYamlEnum):
-    nil = NilOutputFunction
-    stdout = StdoutOutputFunction
-    variable_store = VariableStoreOutputFunction
-
+class TerminationCondition:
+    @abstractmethod
+    def to_api_str(self) -> str:
+        ...
 
 @dataclass
-class NumberOfStepsTerminationCondition:
+class NumberOfStepsTerminationCondition(TerminationCondition):
     max_number_of_steps: int
 
-    def to_yaml(self) -> str:
+    def to_api_str(self) -> str:
         return (
             r"&simulator.NumberOfStepsTerminationCondition{MaxNumberOfSteps: "
             + str(self.max_number_of_steps)
@@ -72,10 +65,10 @@ class NumberOfStepsTerminationCondition:
 
 
 @dataclass
-class TimeElapsedTerminationCondition:
+class TimeElapsedTerminationCondition(TerminationCondition):
     max_time_elapsed: int
 
-    def to_yaml(self) -> str:
+    def to_api_str(self) -> str:
         return (
             r"&simulator.TimeElapsedTerminationCondition{MaxTimeElapsed: "
             + str(self.max_time_elapsed)
@@ -83,16 +76,17 @@ class TimeElapsedTerminationCondition:
         )
 
 
-class TerminationCondition(CallableYamlEnum):
-    number_of_steps = NumberOfStepsTerminationCondition
-    time_elapsed = TimeElapsedTerminationCondition
-    
+class TimestepFunction:
+    @abstractmethod
+    def to_api_str(self) -> str:
+        ...
+
 
 @dataclass
-class ConstantTimestepFunction:
+class ConstantTimestepFunction(TimestepFunction):
     stepsize: float
 
-    def to_yaml(self) -> str:
+    def to_api_str(self) -> str:
         return (
         r"&simulator.ConstantTimestepFunction{Stepsize: " 
         + str(self.stepsize) 
@@ -101,11 +95,11 @@ class ConstantTimestepFunction:
 
 
 @dataclass
-class ExponentialDistributionTimestepFunction:
+class ExponentialDistributionTimestepFunction(TimestepFunction):
     mean: float
     seed: int
 
-    def to_yaml(self) -> str:
+    def to_api_str(self) -> str:
         return (
             r"simulator.NewExponentialDistributionTimestepFunction("
             + str(self.mean) 
@@ -115,14 +109,20 @@ class ExponentialDistributionTimestepFunction:
         )
 
 
-class TimestepFunction(CallableYamlEnum):
-    constant = ConstantTimestepFunction
-    exponential_distribution = ExponentialDistributionTimestepFunction
+class StochadexIteration:
+    @abstractmethod
+    def to_api_str(self) -> str:
+        ...
+    
+    @staticmethod
+    @abstractmethod
+    def package() -> str:
+        ...
 
 
 @dataclass
-class ConstantValuesIteration:
-    def to_yaml(self) -> str:
+class ConstantValuesIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&simulator.ConstantValuesIteration{}"
     
     @staticmethod
@@ -131,8 +131,8 @@ class ConstantValuesIteration:
     
 
 @dataclass
-class WienerProcessIteration:
-    def to_yaml(self) -> str:
+class WienerProcessIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.WienerProcessIteration{}"
     
     @staticmethod
@@ -141,8 +141,8 @@ class WienerProcessIteration:
     
 
 @dataclass
-class PoissonProcessIteration:
-    def to_yaml(self) -> str:
+class PoissonProcessIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.PoissonProcessIteration{}"
     
     @staticmethod
@@ -151,8 +151,8 @@ class PoissonProcessIteration:
     
 
 @dataclass
-class CompoundPoissonProcessIteration:
-    def to_yaml(self) -> str:
+class CompoundPoissonProcessIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.CompoundPoissonProcessIteration{}"
     
     @staticmethod
@@ -161,8 +161,8 @@ class CompoundPoissonProcessIteration:
 
 
 @dataclass
-class CoxProcessIteration:
-    def to_yaml(self) -> str:
+class CoxProcessIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.CoxProcessIteration{}"
     
     @staticmethod
@@ -171,8 +171,8 @@ class CoxProcessIteration:
 
 
 @dataclass
-class DriftDiffusionIteration:
-    def to_yaml(self) -> str:
+class DriftDiffusionIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.DriftDiffusionIteration{}"
     
     @staticmethod
@@ -181,8 +181,8 @@ class DriftDiffusionIteration:
 
 
 @dataclass
-class FractionalBrownianMotionIteration:
-    def to_yaml(self) -> str:
+class FractionalBrownianMotionIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.FractionalBrownianMotionIteration{}"
     
     @staticmethod
@@ -191,8 +191,8 @@ class FractionalBrownianMotionIteration:
 
 
 @dataclass
-class GeometricBrownianMotionIteration:
-    def to_yaml(self) -> str:
+class GeometricBrownianMotionIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.GeometricBrownianMotionIteration{}"
     
     @staticmethod
@@ -201,8 +201,8 @@ class GeometricBrownianMotionIteration:
 
 
 @dataclass
-class HawkesProcessIteration:
-    def to_yaml(self) -> str:
+class HawkesProcessIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.HawkesProcessIteration{}"
     
     @staticmethod
@@ -211,8 +211,8 @@ class HawkesProcessIteration:
 
 
 @dataclass
-class OrnsteinUhlenbeckIteration:
-    def to_yaml(self) -> str:
+class OrnsteinUhlenbeckIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.OrnsteinUhlenbeckIteration{}"
     
     @staticmethod
@@ -221,8 +221,8 @@ class OrnsteinUhlenbeckIteration:
 
 
 @dataclass
-class HistogramNodeIteration:
-    def to_yaml(self) -> str:
+class HistogramNodeIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.HistogramNodeIteration{}"
     
     @staticmethod
@@ -231,8 +231,8 @@ class HistogramNodeIteration:
 
 
 @dataclass
-class PipelineStageIteration:
-    def to_yaml(self) -> str:
+class PipelineStageIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.PipelineStageIteration{}"
     
     @staticmethod
@@ -241,8 +241,8 @@ class PipelineStageIteration:
 
 
 @dataclass
-class StateTransitionIteration:
-    def to_yaml(self) -> str:
+class StateTransitionIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.StateTransitionIteration{}"
     
     @staticmethod
@@ -252,27 +252,11 @@ class StateTransitionIteration:
 
 
 @dataclass
-class WeightedMeanIteration:
-    def to_yaml(self) -> str:
+class WeightedMeanIteration(StochadexIteration):
+    def to_api_str(self) -> str:
         return r"&phenomena.WeightedMeanIteration{}"
     
     @staticmethod
     def package() -> str:
         return "github.com/umbralcalc/stochadex/pkg/phenomena"
 
-
-class StochadexIteration(CallableYamlEnum):
-    constant_values = ConstantValuesIteration
-    wiener_process = WienerProcessIteration
-    poisson_process = PoissonProcessIteration
-    compound_poisson_process = CompoundPoissonProcessIteration
-    cox_process = CoxProcessIteration
-    drift_diffusion = DriftDiffusionIteration
-    fractional_brownian_motion = FractionalBrownianMotionIteration
-    geometric_brownian_motion = GeometricBrownianMotionIteration
-    hawkes_process = HawkesProcessIteration
-    ornstein_uhlenbeck = OrnsteinUhlenbeckIteration
-    histogram_node = HistogramNodeIteration
-    pipeline_stage = PipelineStageIteration
-    state_transition = StateTransitionIteration
-    weighted_mean = WeightedMeanIteration
